@@ -1,6 +1,8 @@
 const xhr = new XMLHttpRequest();
 let xhrContent = "";
 let data = "";
+let wineNames = "";
+let countries = [];
 
 // chargement de la page
 xhr.onload = function(){
@@ -9,10 +11,9 @@ xhr.onload = function(){
         xhrContent = JSON.parse(xhr.responseText);
         console.log(xhrContent); //Affichage des données dans la console
 
-        // boucle pour récupérer les données individuellement
-        for(let i = 0; i <= Object.keys(xhrContent).length; i++){
-            document.getElementById("wineName").innerHtml = xhrContent[i];
-        }
+        //afficher les vins
+        showWines();
+
 
     }
 }
@@ -27,37 +28,67 @@ xhr.send();
 
 // afficher les vins
 function showWines(){
+    // boucle pour récupérer les données individuellement
+    for(let i = 1; i <= Object.keys(xhrContent).length; i++){
+        // on créer une baliste li pour chaque élément
+        let li = document.createElement("li");
+        let ul = document.getElementById("wineName");
+        // on ajoute un id personnel à chacun de ces éléments pour pouvoir leur donner un nom propre
+        li.setAttribute("id", i);
+        ul.appendChild(li);
+        document.getElementById(i).innerHTML = xhrContent[i]['name'];
+
+        // partie récupération des filtres (country)
+        countries[i-1] = xhrContent[i]['country'];
+        let option = document.createElement("option");
+        let select = document.getElementById("countries");
+        option.setAttribute("id", i);
+        option.textContent = xhrContent[i]['country'];
+        option.setAttribute("value", xhrContent[i]['country']);
+        select.appendChild(option);
+
+        // partie récupération des filtres (years)
+        countries[i-1] = xhrContent[i]['year'];
+        option = document.createElement("option");
+        select = document.getElementById("years");
+        option.setAttribute("id", i);
+        option.textContent = xhrContent[i]['year'];
+        option.setAttribute("value", xhrContent[i]['year']);
+        select.appendChild(option);
+    }
+
 
 }
 
-// trier sur base de l'element
+// TODO trier sur base de l'element
 function sortBy(element){
 
 }
 
-// filtrer sur base de l'element
+// TODO filtrer sur base de l'element (exemple years ou countries)
 function filterBy(element){
-
+    //TODO ne pas avoir de doublons dans les filtres
+    //TODO trier les éléments
 }
 
-// rechercher un element
+// TODO rechercher un element
 function search(element){
 
 }
 
-// ajouter une photo à un vin
+// TODO ajouter une photo à un vin
 function addPicture(wine){
 
 }
 
-// ajouter une note à un vin
+// TODO ajouter une note à un vin
 function addNote(wine){
 
 }
 
-// ajouter un j'aime à un vin
+// TODO ajouter un j'aime à un vin
 function like(wine){
-// un utilisateur ne peut aimer 2 fois un vin
+// TODO un utilisateur ne peut aimer 2 fois un vin
 
 }
 
