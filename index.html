@@ -7,57 +7,41 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="app.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
     <link rel="stylesheet" href="style.css">
     <link rel="shortcut icon" type="image/png" href="favicon.png">
     <title>Mon Cellier SPA</title>
 </head>
 <body class="col-md-12">
-    <div class="container">        
+    <div class="container">
         <div class="row">
             <div id="block1" class="col-md-12;"  style="margin-left: 600px; margin-top: 10px;">
                 <a href=index.html><img src="images/caviste-bg-w.png" style="margin-left: 80px" weidth="100" height="80"></a>
             </div>
         </div>
         <div>
-            <form class="form-inline" action=""></form>
+            <form class="form-inline" action="">
                 <input type="text" style="font-size: 20px" placeholder="Enter keyword here...">
                 <button class="btn btn-success" style="margin-top: -9px"><i>Search</i></button>
-            </form><br><br>
+            <br><br>
+            </form>
+
             <form class="form-inline" action="" style="margin-left: 1000px; margin-top: -40px;">
-                <select name="" id="country" style="font-size: 25px; font-style: italic;">
+                <select name="countries" id="countries" style="font-size: 25px; font-style: italic;">
                     <option value="all">All countries</option>
-                    <option value="be">Belgique</option>
-                    <option value="fr">France</option>
-                    <option value="us">USA</option>
-                    <option value="pl">Portugal</option>
-                    <option value="it">Italy</option>
                 </select>
-                <select name="" id="year" style="font-size: 25px; font-style: italic;">
+                <select name="years" id="years" style="font-size: 25px; font-style: italic;">
                     <option value="all">All years</option>
-                    <option value="2020">2020</option>
-                    <option value="2010">2010</option>
-                    <option value="2000">2000</option>
-                    <option value="1990">1990</option>
                 </select>
                 <button class="btn btn-primary" style="margin-top: -10px"><i>Filtre</i></button>
             </form>
+
         </div><br>
         <div class="row">
-            <div id="list" class="col-md-4">
+            <div id="wines_list" class="col-md-4">
                 <ul class="list-group">
-                    <li class="list-group-item"><i>A one item</i></li>
-                    <li class="list-group-item"><i>A second item</i></li>
-                    <li class="list-group-item"><i>A third item</i></li>
-                    <li class="list-group-item"><i>A fourth item</i></li>
-                    <li class="list-group-item"><i>And a fifth one</i></li>
-                    <li class="list-group-item"><i>An item</i></li>
-                    <li class="list-group-item"><i>A second item</i></li>
-                    <li class="list-group-item"><i>A third item</i></li>
-                    <li class="list-group-item"><i>A fourth item</i></li>
-                    <li class="list-group-item"><i>And a fifth one</i></li>
-                    <li class="list-group-item"><i>A fourth item</i></li>
-                    <li class="list-group-item"><i>And a fifth one</i></li>
+
                   </ul>
             </div>
             <div id="photo" class="col-md-4">
@@ -75,9 +59,9 @@
                 <div>
                     <i class="fas fa-camera"></i> Add a picture (1/3)      <i class="fas fa-pencil-alt"></i> Add a note<br><br>
                     <i class="fab fa-gratipay"></i> Like this wine
-                </div>            
+                </div>
             </div>
-        </div>                            
-    </div>   
+        </div>
+    </div>
 </body>
 </html>
