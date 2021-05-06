@@ -1,67 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    <script src="app.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
-    <link rel="stylesheet" href="style.css">
-    <link rel="shortcut icon" type="image/png" href="favicon.png">
-    <title>Mon Cellier SPA</title>
-</head>
-<body class="col-md-12">
-    <div class="container">
-        <div class="row">
-            <div id="block1" class="col-md-12;"  style="margin-left: 600px; margin-top: 10px;">
-                <a href=index.html><img src="images/caviste-bg-w.png" style="margin-left: 80px" weidth="100" height="80"></a>
-            </div>
-        </div>
-        <div>
-            <form class="form-inline" action="">
-                <input type="text" style="font-size: 20px" placeholder="Enter keyword here...">
-                <button class="btn btn-success" style="margin-top: -9px"><i>Search</i></button>
-            <br><br>
-            </form>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+		<script src="app.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
+		<link rel="stylesheet" href="style.css">
+		<link rel="shortcut icon" type="image/png" href="favicon.png">
+		<title>Mon Cellier SPA</title>
+	</head>
+	<body>
+			<div class="container" >
+				<div id='left-Block'>
+					<div id="logo">
+						<a href=index.html><img src="images/caviste-bg-w.png" ></a>
+					</div>
+					
+					<div id="filter-bar" class="row">
+						<form class="form-inline" action="">
+							<input type="text" placeholder="Enter keyword here...">
+							<button class="btn btn-success"><i>Search</i></button>
+							<select name="countries" id="countries" >
+								<option value="all">All countries</option>
+							</select>
+							<select name="years" id="years" >
+								<option value="all">All years</option>
+							</select>
+							<button class="btn btn-primary"><i>Filter</i></button>
+						</form>
+					</div>
+					
+					<div class="row" id="wines_list">
+						<ul class="list-group" id="list-group"></ul>
+					</div>
+				</div>
+				
+				<div id="midle-Block">
+					<img src="images/vin05.jpg">
+				</div>
+				
+				<div id="right-Block">
+					<div id="description">
+						<span style="background-color: gray; font-size: 30px;">#9</span><label><h1><i>Wine white</i></h1></label><br>
+						<label><i>Grapes: Pinot Noir</i></label><br>
+						<label><i>Country: USA</i></label><br>
+						<label><i>Region: California</i</label><br>
+						<label><i>Year: 2009</i></label><br>
+						<label><i>Capacity: 75Cl</i></label><br>
+						<label><i>Color: White</i></label><br>
+						<label><i>Price: 24 €</i></label><br><br>
+						<div>
+							<i class="fas fa-camera"></i> Add a picture (1/3)      <i class="fas fa-pencil-alt"></i> Add a note<br><br>
+							<i class="fab fa-gratipay"></i> Like this wine
+						</div>
+					</div>
+				</div>
+			</div>
 
-            <form class="form-inline" action="" style="margin-left: 1000px; margin-top: -40px;">
-                <select name="countries" id="countries" style="font-size: 25px; font-style: italic;">
-                    <option value="all">All countries</option>
-                </select>
-                <select name="years" id="years" style="font-size: 25px; font-style: italic;">
-                    <option value="all">All years</option>
-                </select>
-                <button class="btn btn-primary" style="margin-top: -10px"><i>Filtre</i></button>
-            </form>
-
-        </div><br>
-        <div class="row">
-            <div id="wines_list" class="col-md-4">
-                <ul class="list-group">
-
-                  </ul>
-            </div>
-            <div id="photo" class="col-md-4">
-                <img src="images/vin05.jpg" style="margin: 80px"><br>
-            </div>
-            <div id="description" class="col-md-4">
-                <span style="background-color: gray; font-size: 30px;">#9</span><label><h1><i>Wine white</i></h1></label><br>
-                <label><i>Grapes: Pinot Noir</i></label><br>
-                <label><i>Country: USA</i></label><br>
-                <label><i>Region: California</i</label><br>
-                <label><i>Year: 2009</i></label><br>
-                <label><i>Capacity: 75Cl</i></label><br>
-                <label><i>Color: White</i></label><br>
-                <label><i>Price: 24 €</i></label><br><br>
-                <div>
-                    <i class="fas fa-camera"></i> Add a picture (1/3)      <i class="fas fa-pencil-alt"></i> Add a note<br><br>
-                    <i class="fab fa-gratipay"></i> Like this wine
-                </div>
-            </div>
-        </div>
-    </div>
-</body>
+	</body>
 </html>
