@@ -3,6 +3,10 @@ let xhrContent = "";
 let data = "";
 let wineNames = "";
 let countries = [];
+let li = "";
+let ul = "";
+let select = "";
+let option = "";
 
 // chargement de la page
 xhr.onload = function(){
@@ -13,6 +17,9 @@ xhr.onload = function(){
 
         //afficher les vins
         showWines();
+
+        //afficher les élements du vin
+        showWine();
 
 
     }
@@ -31,8 +38,8 @@ function showWines(){
     // boucle pour récupérer les données individuellement
     for(let i = 1; i <= Object.keys(xhrContent).length; i++){
         // on créer une baliste li pour chaque élément
-        let li = document.createElement("li");
-        let ul = document.getElementById("wines_list");
+        li = document.createElement("li");
+        ul = document.getElementById("wines_list");
         // on ajoute un id personnel à chacun de ces éléments pour pouvoir les sélectionner
         li.setAttribute("class", "list-group-item");
         li.setAttribute("id", i);
@@ -41,10 +48,10 @@ function showWines(){
 
         // partie récupération des filtres (country)
         countries[i-1] = xhrContent[i]['country'];
-        let option = document.createElement("option");
-        let select = document.getElementById("countries");
+        option = document.createElement("option");
+        select = document.getElementById("countries");
         option.setAttribute("id", i);
-        option.textContent = xhrContent[i]['country'];
+        option.innerHTML = xhrContent[i]['country'];
         option.setAttribute("value", xhrContent[i]['country']);
         select.appendChild(option);
 
@@ -53,14 +60,44 @@ function showWines(){
         option = document.createElement("option");
         select = document.getElementById("years");
         option.setAttribute("id", i);
-        option.textContent = xhrContent[i]['year'];
+        option.innerHTML = xhrContent[i]['year'];
         option.setAttribute("value", xhrContent[i]['year']);
         select.appendChild(option);
     }
+    /*
+    let counter = 1;
+    for (let element in xhrContent[counter]){
+        li = document.createElement("li");
+        ul = document.getElementById("wineData");
+        li.setAttribute("id", counter);
+        ul.appendChild(li);
+        document.getElementById("wineData").innerHTML = xhrContent[counter][element];
+        console.log(xhrContent[counter][element]);
+        counter++;
+    }*/
+//for (let k in xhrContent[1]){console.log(xhrContent[1][k])} Permet de récupérer chaque valeur
 
 
 }
 
+// TODO sélectionner un vin dans la liste
+function showWine(id = 1){ //id = 1 pour les tests
+    // afficher les éléments de chaque vin
+    let grapes = document.getElementById("grapes");
+    grapes.innerHTML = xhrContent[id]['grapes'];
+    let country = document.getElementById("country");
+    country.innerHTML = xhrContent[id]['country'];
+    let region = document.getElementById("region");
+    region.innerHTML = xhrContent[id]['region'];
+    let year = document.getElementById("year");
+    year.innerHTML = xhrContent[id]['year'];
+    let capacity = document.getElementById("capacity");
+    capacity.innerHTML = xhrContent[id]['capacity'];
+    let color = document.getElementById("color");
+    color.innerHTML = xhrContent[id]['color'];
+    let price = document.getElementById("price");
+    price.innerHTML = xhrContent[id]['price'];
+}
 // TODO trier sur base de l'element
 function sortBy(element){
 
