@@ -7,6 +7,8 @@ let li = "";
 let ul = "";
 let select = "";
 let option = "";
+const apiURL = 'http://cruth.phpnet.org/epfc/caviste/public/index.php';
+const pictureURL ='file:///C:/Users/BelAgencyWeb/Desktop/Caviste/images/pics/'; 
 
 // chargement de la page
 xhr.onload = function(){
@@ -22,7 +24,7 @@ xhr.onload = function(){
         showWine();
     }
     // Effet sur un élément de la liste
-    const list = document.querySelectorAll('.list-group-item');
+    let list = document.querySelectorAll('.list-group-item');
     for(let i=0; i<list.length; i++){
         list[i].addEventListener('mouseover', function(){
             list[i].style.backgroundColor = 'green';
@@ -30,7 +32,7 @@ xhr.onload = function(){
         });
     }
  
-     for(let i=0; i<list.length; i++){
+    for(let i=0; i<list.length; i++){
         list[i].addEventListener('mouseout', function(){
             list[i].style.backgroundColor = 'white';
             list[i].style.color = 'black';
@@ -43,7 +45,7 @@ xhr.onerror = function(){
 
 }
 
-xhr.open('GET', 'http://cruth.phpnet.org/epfc/caviste/public/index.php/api/wines', true);
+xhr.open('GET', apiURL + '/api/wines', true);
 xhr.send();
 
 // afficher les vins
@@ -96,21 +98,32 @@ function showWines(){
 
 // TODO sélectionner un vin dans la liste
 function showWine(id = 1){ //id = 1 pour les tests
-    // afficher les éléments de chaque vin
-    let grapes = document.getElementById("grapes");
-    grapes.innerHTML = xhrContent[id]['grapes'];
-    let country = document.getElementById("country");
-    country.innerHTML = xhrContent[id]['country'];
-    let region = document.getElementById("region");
-    region.innerHTML = xhrContent[id]['region'];
-    let year = document.getElementById("year");
-    year.innerHTML = xhrContent[id]['year'];
-    let capacity = document.getElementById("capacity");
-    capacity.innerHTML = xhrContent[id]['capacity'];
-    let color = document.getElementById("color");
-    color.innerHTML = xhrContent[id]['color'];
-    let price = document.getElementById("price");
-    price.innerHTML = xhrContent[id]['price'];
+    // afficher les éléments de chaque vin    
+    let list = document.querySelectorAll('.list-group-item');
+    let idAf = document.querySelector('#description > span');
+    let imgWin = document.querySelector('#photo > img');
+    for(let i=1; i<13; i++){
+        list[i-1].addEventListener('click', function(){
+            imgWin.src = pictureURL + xhrContent[i]['picture'];
+            idAf.innerHTML = '# ' + xhrContent[i]['id'];
+            let name = document.querySelectorAll('#description > label > h3 > i');
+            name[0].innerHTML = xhrContent[i]['name'];
+            let grapes = document.getElementById("grapes");
+            grapes.innerHTML = xhrContent[i]['grapes'];
+            let country = document.getElementById("country");
+            country.innerHTML = xhrContent[i]['country'];
+            let region = document.getElementById("region");
+            region.innerHTML = xhrContent[i]['region'];
+            let year = document.getElementById("year");
+            year.innerHTML = xhrContent[i]['year'];
+            let capacity = document.getElementById("capacity");
+            capacity.innerHTML = xhrContent[i]['capacity'];
+            let color = document.getElementById("color");
+            color.innerHTML = xhrContent[i]['color'];
+            let price = document.getElementById("price");
+            price.innerHTML = xhrContent[i]['price'];
+        });
+    }
 }
 // TODO trier sur base de l'element
 function sortBy(element){
