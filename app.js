@@ -13,15 +13,28 @@ xhr.onload = function(){
     // traitement de la requête
     if(this. status == 200 && this.readyState == 4){
         xhrContent = JSON.parse(xhr.responseText);
-        console.log(xhrContent); //Affichage des données dans la console
+        //console.log(xhrContent); //Affichage des données dans la console
 
         //afficher les vins
         showWines();
 
         //afficher les élements du vin
         showWine();
-
-
+    }
+    // Effet sur un élément de la liste
+    const list = document.querySelectorAll('.list-group-item');
+    for(let i=0; i<list.length; i++){
+        list[i].addEventListener('mouseover', function(){
+            list[i].style.backgroundColor = 'green';
+            list[i].style.color = 'white';
+        });
+    }
+ 
+     for(let i=0; i<list.length; i++){
+        list[i].addEventListener('mouseout', function(){
+            list[i].style.backgroundColor = 'white';
+            list[i].style.color = 'black';
+        });
     }
 }
 
@@ -62,7 +75,8 @@ function showWines(){
         option.setAttribute("id", i);
         option.innerHTML = xhrContent[i]['year'];
         option.setAttribute("value", xhrContent[i]['year']);
-        select.appendChild(option);
+        select.appendChild(option);      
+    
     }
     /*
     let counter = 1;
