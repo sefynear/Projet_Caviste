@@ -16,7 +16,6 @@ xhr.onload = function(){
     if(this. status == 200 && this.readyState == 4){
         xhrContent = JSON.parse(xhr.responseText);
         //console.log(xhrContent); //Affichage des données dans la console
-
         //afficher les vins
         showWines();
 
@@ -98,10 +97,11 @@ function showWines(){
 
 // TODO sélectionner un vin dans la liste
 function showWine(id = 1){ //id = 1 pour les tests
-    // afficher les éléments de chaque vin    
+    // afficher les éléments de chaque vin  
     let list = document.querySelectorAll('.list-group-item');
     let idAf = document.querySelector('#description > span');
-    let imgWin = document.querySelector('#photo > img');
+    let imgWin = document.querySelector('#photo > img');    
+
     for(let i=1; i<13; i++){
         list[i-1].addEventListener('click', function(){
             imgWin.src = pictureURL + xhrContent[i]['picture'];
