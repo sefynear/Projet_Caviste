@@ -95,7 +95,7 @@ function showWines(){
 
 }
 
-// TODO sélectionner un vin dans la liste
+// sélectionner un vin dans la liste
 function showWine(id = 1){ //id = 1 pour les tests
     // afficher les éléments de chaque vin  
     let list = document.querySelectorAll('.list-group-item');
@@ -137,7 +137,38 @@ function filterBy(element){
 }
 
 // TODO rechercher un element
-function search(element){
+function search(element){                
+                const inputSearch = document.querySelector('#inputKey');
+                let keyword = inputSearch.value;
+                let reg = new RegExp(keyword, 'i');
+                // console.log(keyword.length);
+                let tabVins = [];
+                Object.values(data).forEach(function(vin){
+                    if(vin.name.search(reg) != -1){
+                        tabVins.push(vin);
+                    }
+                    else if((keyword.length <= 2) && (vin.id.search(reg) != -1)){
+                        tabVins.push(vin);            
+                    }
+                    else if((keyword.length == 4) && (vin.year.search(reg) != -1)){
+                        tabVins.push(vin);
+                    }        
+                })
+                // Affichage de descriptions d'un vin
+                for(let i=1; i<13; i++){
+                    imgAffiche.src = pictureURL + tabVins[0].picture; 
+                    allDescription[0].innerHTML = tabVins[0].grapes;
+                    allDescription[1].innerHTML = tabVins[0].country;
+                    allDescription[2].innerHTML = tabVins[0].region;
+                    allDescription[3].innerHTML = data[i].year;
+                    allDescription[4].innerHTML = tabVins[0].capacity;
+                    allDescription[5].innerHTML = tabVins[0].color;
+                    allDescription[6].innerHTML = tabVins[0].price;
+                    idDescription.innerHTML = '#' + tabVins[0].id;
+                    nameDescription.innerHTML = tabVins[0].name;                                  
+                    list[i-1].innerHTML = '';
+                }                                                    
+                list[0].innerHTML = tabVins[0].name;
 
 }
 
