@@ -20,6 +20,13 @@ window.onload = function(){
     //btSort.addEventListener('click', sort); //TODO
     let btSearch = document.getElementById("btSearch");
     btSearch.addEventListener('click', search);
+    //btAddImg.addEventListener('click', addPicture(wine)); TODO
+    $('#pictureFile').css('display', 'none');
+    let btAddImg = document.querySelector('#description > div > i.fas.fa-camera');
+    btAddImg.addEventListener('click', addPicture);
+    let pictureFile = document.querySelector('#pictureFile');
+    pictureFile.addEventListener('change', addPicture);
+
 }
 
 // traitement de la requête
@@ -30,36 +37,28 @@ xhr.onload = function(){
         jsonToArray();
         getYears();
         getCountries();
-        filter();
-
-
-    }
-    // Effets sur chaque élément de la liste des vins
-    let list = document.querySelectorAll('.list-group-item');
-    for(let i=0; i<list.length; i++){
-        list[i].addEventListener('mouseover', function(){
-            list[i].style.backgroundColor = 'green';
-            list[i].style.color = 'white';
-        });
-    }
-
-    for(let i=0; i<list.length; i++){
-        list[i].addEventListener('mouseout', function(){
-            list[i].style.backgroundColor = 'white';
-            list[i].style.color = 'black';
-        });
-    }
+        filter();    
+    }    
+    effetListe();
 }
-
-
-
 // erreurs au chargement de la page
 xhr.onerror = function(){
 
 }
-
 xhr.open('GET', apiURL + '/api/wines', true);
 xhr.send();
+
+// Effets mouseover et mouseout sur chaque élément de la liste des vins   
+function effetListe(){
+    $('.list-group-item').mouseover(function(){
+        $(this).css('background-color', 'green');
+        $(this).css('color', 'white');
+    });
+        $('.list-group-item').mouseout(function(){
+        $(this).css('background-color', 'white');
+        $(this).css('color', 'black');
+    });
+}
 
 // conversion en array pour permettre l'utilisation de la fonction filtre
 function jsonToArray(){
@@ -74,46 +73,67 @@ function jsonToArray(){
 function showWines(wines = xhrContent){
     console.log(wines);
     // boucle pour récupérer les données individuellement
-        // on crée une balise li pour chaque élément
-        $('.list-group-item').remove();
+    // on crée une balise li pour chaque élément
+    $('.list-group-item').remove();
 
-        Object.keys(wines).forEach(function(i){
-                li = document.createElement("li");
-                ul = document.getElementById("wines_list");
-                // on ajoute un id personnel à chacun de ces éléments pour pouvoir les sélectionner
-                li.setAttribute("class", "list-group-item");
-                li.setAttribute("id", i);
-                ul.appendChild(li);
-                document.getElementById(i).innerHTML = '<i>'+wines[i]['name']+'</i>';
-                //
-            });
-            showWine(wines);
-
-}
-
-// partie récupération des filtres (years)
-function getYears(){
-    for(let i = 0; i < winesSize; i++){
-        years[i] = xhrContent[i]['year'];
-        option = document.createElement('option');
-        select = document.getElementById('years');
-        option.innerHTML = xhrContent[i]['year'];
-        option.setAttribute("value", xhrContent[i]['year']);
-        select.appendChild(option);
-    }
+    Object.keys(wines).forEach(function(i){
+        li = document.createElement("li");
+        ul = document.getElementById("wines_list");
+        // on ajoute un id personnel à chacun de ces éléments pour pouvoir les sélectionner
+        li.setAttribute("class", "list-group-item");
+        li.setAttribute("id", i);
+        ul.appendChild(li);
+        document.getElementById(i).innerHTML = '<i>'+wines[i]['name']+'</i>';
+        //
+    });
+    showWine(wines);
 }
 
 // partie récupération des filtres (country)
 function getCountries(){
     countries = "";
-    for(let i = 0; i < winesSize; i++){
-        countries[i] = xhrContent[i]['country'];
-        option = document.createElement('option');
-        select = document.getElementById('countries');
-        option.innerHTML = xhrContent[i]['country'];
-        option.setAttribute("value", xhrContent[i]['country']);
-        select.appendChild(option);
+    // Trie des pays
+    let trieCountries = xhrContent.sort(function(a,b){
+        if(a.country < b.country){
+            return -1;
+        }
+        if(a.country > b.country){
+            return 1;
+        }
+        return 0;
+    });
+    console.log(trieCountries);
+    
+    for(let j = 0; j < winesSize; j++){
+        if(option.innerHTML !== trieCountries[j]['country']){
+            countries[j] = trieCountries[j]['country'];
+            option = document.createElement('option');
+            select = document.getElementById('countries');
+            option.innerHTML = trieCountries[j]['country'];
+            option.setAttribute("value", trieCountries[j]['country']);
+            select.appendChild(option);
+        }
     }
+}
+// partie récupération des filtres (years)
+function getYears(){
+    // Trie des années
+   let trieYears = xhrContent.sort(function(a,b){
+       return a.year - b.year;
+   });
+   console.log(trieYears);
+   
+   for(let i = 0; i < winesSize; i++){
+        option = document.createElement('option');
+        select = document.getElementById('years');
+        if(option.innerHTML !== trieYears[i]['year']){
+            years[i] = trieYears[i]['year'];
+            option.innerHTML = trieYears[i]['year'];
+            option.setAttribute("value", trieYears[i]['year']);
+            select.appendChild(option);
+        }
+   }    
+   
 }
 
 // afficher les éléments de chaque vin
@@ -121,8 +141,8 @@ function getCountries(){
 // la fonction showWines appelle la fonction showWine apprès avoir afficher la liste des vins
 function showWine(wines){
 
-    let idAf = document.querySelector('#description > span');
-    let imgWin = document.querySelector('#photo > img');
+    // let idAf = document.querySelector('#description > span');
+    // let imgWin = document.querySelector('#photo > img');
     let list = document.querySelectorAll('.list-group-item');
 
     for(let i = 0; i< list.length; i++){
@@ -157,7 +177,7 @@ function sortBy(element){
 }
 
 // permet la filtration selon les critères sélectionnés
-function filter(){
+function filter(){ 
     let selectCountry = document.getElementById("countries");
     let selectedCountry = selectCountry.value;
     let selectYear = document.getElementById("years");
@@ -185,6 +205,9 @@ function filter(){
 
     //TODO ne pas avoir de doublons dans les filtres
     //TODO trier les éléments filtrés
+
+    // Effet sur liste
+    effetListe();
 }
 
 // TODO rechercher un element
@@ -224,8 +247,12 @@ function search(element){
 }
 
 // TODO ajouter une photo à un vin
-function addPicture(wine){
-
+function addPicture(){
+    
+    console.log('OK');
+    //Afficher la boite de dialogue pour changer l'image
+    $('#pictureFile').css('display', 'block');   
+    
 }
 
 // TODO ajouter une note à un vin
