@@ -7,29 +7,28 @@ let years = [];
 let li = "";
 let ul = "";
 const apiURL = 'http://cruth.phpnet.org/epfc/caviste/public/index.php';
-const pictureURL ='file:///C:/Users/BelAgencyWeb/Desktop/Caviste/images/pics/';
+const pictureURL ='file:///C:/Users/BelAgencyWeb/Desktop/Projet_Caviste/images/pics/';
 let winesSize = 0;
 let arrayWines = [];
-let filtered = "";
-let order = false;
-let option = "";
 
 // chargement de la page
 window.onload = function(){
     let btFilter = document.getElementById("btFilter");
+    //let btSort = document.getElementById("btSort"); //TODO
     btFilter.addEventListener('click', filter);
-
+    //btSort.addEventListener('click', sort); //TODO
     let btSearch = document.getElementById("btSearch");
     btSearch.addEventListener('click', search);
-    let btSort = document.getElementById("btSort");
-    btSort.addEventListener('click', sort);
-
     //btAddImg.addEventListener('click', addPicture(wine)); TODO
     $('#pictureFile').css('display', 'none');
     let btAddImg = document.querySelector('#description > div > i.fas.fa-camera');
     btAddImg.addEventListener('click', addPicture);
     let pictureFile = document.querySelector('#pictureFile');
     pictureFile.addEventListener('change', addPicture);
+    //déconnexion
+    $('#ko').css('display', 'none');
+    let btDeconnex = document.querySelector('#ko');
+    btDeconnex.addEventListener('click', deconnexion);
 
 }
 
@@ -41,9 +40,10 @@ xhr.onload = function(){
         jsonToArray();
         getYears();
         getCountries();
-        sort();
-        filter();
-    }
+        filter();   
+        connexion(); 
+        //deconnexion();
+    }    
     effetListe();
 }
 // erreurs au chargement de la page
@@ -53,7 +53,7 @@ xhr.onerror = function(){
 xhr.open('GET', apiURL + '/api/wines', true);
 xhr.send();
 
-// Effets mouseover et mouseout sur chaque élément de la liste des vins
+// Effets mouseover et mouseout sur chaque élément de la liste des vins   
 function effetListe(){
     $('.list-group-item').mouseover(function(){
         $(this).css('background-color', 'green');
@@ -62,6 +62,24 @@ function effetListe(){
         $('.list-group-item').mouseout(function(){
         $(this).css('background-color', 'white');
         $(this).css('color', 'black');
+    });
+    //connexion
+    $('#ok').mouseover(function(){
+        $(this).css('color', 'blue');
+        $(this).css('fontSize', '30px');
+    });
+    $('#ok').mouseout(function(){
+        $(this).css('color', 'black');
+        $(this).css('fontSize', '14px');
+    });
+    //déconnexion
+    $('#ko').mouseover(function(){
+        $(this).css('color', 'blue');
+        $(this).css('fontSize', '30px');
+    });
+    $('#ko').mouseout(function(){
+        $(this).css('color', 'black');
+        $(this).css('fontSize', '14px');
     });
 }
 
@@ -107,7 +125,8 @@ function getCountries(){
         }
         return 0;
     });
-
+    console.log(trieCountries);
+    
     for(let j = 0; j < winesSize; j++){
         if(option.innerHTML !== trieCountries[j]['country']){
             countries[j] = trieCountries[j]['country'];
@@ -120,23 +139,24 @@ function getCountries(){
     }
 }
 // partie récupération des filtres (years)
-
 function getYears(){
     // Trie des années
    let trieYears = xhrContent.sort(function(a,b){
        return a.year - b.year;
    });
-
+   console.log(trieYears);
+   
    for(let i = 0; i < winesSize; i++){
-       if(option.innerHTML !== trieYears[i]['year']){
-           countries[i] = trieYears[i]['year'];
-           option = document.createElement('option');
-           select = document.getElementById('years');
-           option.innerHTML = trieYears[i]['year'];
-           option.setAttribute("value", trieYears[i]['year']);
-           select.appendChild(option);
-       }
-   }
+        option = document.createElement('option');
+        select = document.getElementById('years');
+        if(option.innerHTML !== trieYears[i]['year']){
+            years[i] = trieYears[i]['year'];
+            option.innerHTML = trieYears[i]['year'];
+            option.setAttribute("value", trieYears[i]['year']);
+            select.appendChild(option);
+        }
+   }    
+   
 }
 
 // afficher les éléments de chaque vin
@@ -175,22 +195,12 @@ function showWine(wines){
 }
 
 // TODO trier sur base de l'element
-function sort(){
-    order = !order;
-
-    if(order){
-        showWines(xhrContent.sort((a, b) => a.name !== b.name ? a.name < b.name ? -1 : 1 : 0));
-    }
-    else{
-        showWines(xhrContent.sort((a, b) => a.name !== b.name ? a.name > b.name ? -1 : 1 : 0));
-    }
-        if(filtered){
-            filter();
-    }
+function sortBy(element){
+    //sort(a, b) TODO
 }
 
 // permet la filtration selon les critères sélectionnés
-function filter(){
+function filter(){ 
     let selectCountry = document.getElementById("countries");
     let selectedCountry = selectCountry.value;
     let selectYear = document.getElementById("years");
@@ -199,19 +209,16 @@ function filter(){
     // cas où un pays et une année ont été sélectionnés
     if(selectedCountry != 'all' && selectedYear != 'all'){
         showWines(xhrContent.filter(element => element.country == selectedCountry && element.year == selectedYear));
-        filtered = true;
     }
 
     // cas où seul un pays a été sélectionné
     else if(selectedCountry != 'all' && selectedYear == 'all'){
         showWines(xhrContent.filter(element => element.country == selectedCountry));
-        filtered = true;
     }
 
     // cas où seul une année a été sélectionnée
     else if(selectedCountry == 'all' && selectedYear != 'all'){
         showWines(xhrContent.filter(element => element.year == selectedYear));
-        filtered = true;
     }
 
     else{
@@ -227,26 +234,26 @@ function filter(){
 }
 
 // TODO rechercher un element
-function search(element){
+function search(element){                
                 const inputSearch = document.querySelector('#inputKey');
                 let keyword = inputSearch.value;
                 let reg = new RegExp(keyword, 'i');
                 // console.log(keyword.length);
                 let tabVins = [];
-                Object.keys(data).forEach(function(vin){
+                Object.values(data).forEach(function(vin){
                     if(vin.name.search(reg) != -1){
                         tabVins.push(vin);
                     }
                     else if((keyword.length <= 2) && (vin.id.search(reg) != -1)){
-                        tabVins.push(vin);
+                        tabVins.push(vin);            
                     }
                     else if((keyword.length == 4) && (vin.year.search(reg) != -1)){
                         tabVins.push(vin);
-                    }
+                    }        
                 })
                 // Affichage de descriptions d'un vin
                 for(let i=1; i<13; i++){
-                    imgAffiche.src = pictureURL + tabVins[0].picture;
+                    imgAffiche.src = pictureURL + tabVins[0].picture; 
                     allDescription[0].innerHTML = tabVins[0].grapes;
                     allDescription[1].innerHTML = tabVins[0].country;
                     allDescription[2].innerHTML = tabVins[0].region;
@@ -255,20 +262,20 @@ function search(element){
                     allDescription[5].innerHTML = tabVins[0].color;
                     allDescription[6].innerHTML = tabVins[0].price;
                     idDescription.innerHTML = '#' + tabVins[0].id;
-                    nameDescription.innerHTML = tabVins[0].name;
+                    nameDescription.innerHTML = tabVins[0].name;                                  
                     list[i-1].innerHTML = '';
-                }
+                }                                                    
                 list[0].innerHTML = tabVins[0].name;
 
 }
 
 // TODO ajouter une photo à un vin
 function addPicture(){
-
+    
     console.log('OK');
     //Afficher la boite de dialogue pour changer l'image
-    $('#pictureFile').css('display', 'block');
-
+    $('#pictureFile').css('display', 'block');   
+    
 }
 
 // TODO ajouter une note à un vin
@@ -282,5 +289,126 @@ function like(wine){
 
 }
 
-// TODO gérer la connexion
-// TODO gérer les utilisateurs autorisés
+// gérer la connexion
+function connexion(){
+    $('#frmLogin').css('display', 'none');
+    
+    $('#ok').click(function(){
+        $('#frmLogin').css('display', 'block');
+    });
+    //Liste Users
+    let users = [
+        {
+            login: 'ced',
+            pwd: 1
+        },
+        {
+            login: 'bob',
+            pwd: 2
+        },
+        {
+            login: 'mehdi',
+            pwd: 25
+        },
+        {
+            login: 'youssef',
+            pwd: 26
+        },
+        {
+            login: 'mamadou',
+            pwd: 27
+        },
+        {
+            login: 'manuel',
+            pwd: 28
+        },
+        {
+            login: 'alain',
+            pwd: 29
+        },
+        {
+            login: 'alexandre',
+            pwd: 30
+        },
+        {
+            login: 'fred',
+            pwd: 31
+        },
+        {
+            login: 'ali',
+            pwd: 32
+        },
+        {
+            login: 'angeline',
+            pwd: 33
+        },
+        {
+            login: 'sylwester',
+            pwd: 34
+        },
+        {
+            login: 'alessandro',
+            pwd: 35
+        },
+        {
+            login: 'rachida',
+            pwd: 36
+        },
+        {
+            login: 'badredddine',
+            pwd: 37
+        },
+        {
+            login: 'amandine',
+            pwd: 38
+        },
+        {
+            login: 'guilherme',
+            pwd: 39
+        },
+        {
+            login: 'lauren',
+            pwd: 40
+        },
+        {
+            login: 'ismael',
+            pwd: 41
+        },
+        {
+            login: 'aboubacar',
+            pwd: 42
+        },
+    ];
+    for(let i=0; i<users.length; i++){
+        console.log(users[i]);
+    }
+    // Tgérer les utilisateurs autorisés  
+    let inputLogin = document.querySelector('#frmLogin > input[type=text]');
+    let inputPwd = document.querySelector('#frmLogin > input[type=password]');
+    const btValider = document.querySelector('#frmLogin > input.btn.btn-success');
+    //let btConnex = document.querySelector('#ok');    
+    let message = document.querySelector('#mesage');
+   
+    btValider.addEventListener('click', function(e){
+        e.preventDefault();
+
+        //Connexion
+        for(let i=0; i<users.length; i++){
+            if(inputLogin.value == users[i].login && inputPwd.value == users[i].pwd){
+                $('#frmLogin').css('display', 'none');
+                $('#ok').css('display', 'none');
+                $('#ko').css('display', 'block');
+            }else{
+                message.innerHTML = "Login ou mot de passe incorrect";
+                $('#mesage').css('color', 'red');
+            }
+        }
+    });
+}
+// gérer la déconnexion
+function deconnexion(){  
+    $('#ko').css('display', 'none');
+    $('#ok').css('display', 'block');
+}
+
+    
