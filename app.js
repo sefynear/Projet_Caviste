@@ -7,10 +7,9 @@ let years = [];
 let li = "";
 let ul = "";
 const apiURL = 'http://cruth.phpnet.org/epfc/caviste/public/index.php';
-const pictureURL ='file:///C:/Users/BelAgencyWeb/Desktop/Caviste/images/pics/';
+const pictureURL ='file:///C:/Users/BelAgencyWeb/Desktop/Projet_Caviste/images/pics/';
 let winesSize = 0;
 let arrayWines = [];
-
 
 // chargement de la page
 window.onload = function(){
@@ -26,6 +25,10 @@ window.onload = function(){
     btAddImg.addEventListener('click', addPicture);
     let pictureFile = document.querySelector('#pictureFile');
     pictureFile.addEventListener('change', addPicture);
+    //déconnexion
+    $('#ko').css('display', 'none');
+    let btDeconnex = document.querySelector('#ko');
+    btDeconnex.addEventListener('click', deconnexion);
 
 }
 
@@ -37,7 +40,9 @@ xhr.onload = function(){
         jsonToArray();
         getYears();
         getCountries();
-        filter();    
+        filter();   
+        connexion(); 
+        //deconnexion();
     }    
     effetListe();
 }
@@ -57,6 +62,24 @@ function effetListe(){
         $('.list-group-item').mouseout(function(){
         $(this).css('background-color', 'white');
         $(this).css('color', 'black');
+    });
+    //connexion
+    $('#ok').mouseover(function(){
+        $(this).css('color', 'blue');
+        $(this).css('fontSize', '30px');
+    });
+    $('#ok').mouseout(function(){
+        $(this).css('color', 'black');
+        $(this).css('fontSize', '14px');
+    });
+    //déconnexion
+    $('#ko').mouseover(function(){
+        $(this).css('color', 'blue');
+        $(this).css('fontSize', '30px');
+    });
+    $('#ko').mouseout(function(){
+        $(this).css('color', 'black');
+        $(this).css('fontSize', '14px');
     });
 }
 
@@ -266,5 +289,126 @@ function like(wine){
 
 }
 
-// TODO gérer la connexion
-// TODO gérer les utilisateurs autorisés
+// gérer la connexion
+function connexion(){
+    $('#frmLogin').css('display', 'none');
+    
+    $('#ok').click(function(){
+        $('#frmLogin').css('display', 'block');
+    });
+    //Liste Users
+    let users = [
+        {
+            login: 'ced',
+            pwd: 1
+        },
+        {
+            login: 'bob',
+            pwd: 2
+        },
+        {
+            login: 'mehdi',
+            pwd: 25
+        },
+        {
+            login: 'youssef',
+            pwd: 26
+        },
+        {
+            login: 'mamadou',
+            pwd: 27
+        },
+        {
+            login: 'manuel',
+            pwd: 28
+        },
+        {
+            login: 'alain',
+            pwd: 29
+        },
+        {
+            login: 'alexandre',
+            pwd: 30
+        },
+        {
+            login: 'fred',
+            pwd: 31
+        },
+        {
+            login: 'ali',
+            pwd: 32
+        },
+        {
+            login: 'angeline',
+            pwd: 33
+        },
+        {
+            login: 'sylwester',
+            pwd: 34
+        },
+        {
+            login: 'alessandro',
+            pwd: 35
+        },
+        {
+            login: 'rachida',
+            pwd: 36
+        },
+        {
+            login: 'badredddine',
+            pwd: 37
+        },
+        {
+            login: 'amandine',
+            pwd: 38
+        },
+        {
+            login: 'guilherme',
+            pwd: 39
+        },
+        {
+            login: 'lauren',
+            pwd: 40
+        },
+        {
+            login: 'ismael',
+            pwd: 41
+        },
+        {
+            login: 'aboubacar',
+            pwd: 42
+        },
+    ];
+    for(let i=0; i<users.length; i++){
+        console.log(users[i]);
+    }
+    // Tgérer les utilisateurs autorisés  
+    let inputLogin = document.querySelector('#frmLogin > input[type=text]');
+    let inputPwd = document.querySelector('#frmLogin > input[type=password]');
+    const btValider = document.querySelector('#frmLogin > input.btn.btn-success');
+    //let btConnex = document.querySelector('#ok');    
+    let message = document.querySelector('#mesage');
+   
+    btValider.addEventListener('click', function(e){
+        e.preventDefault();
+
+        //Connexion
+        for(let i=0; i<users.length; i++){
+            if(inputLogin.value == users[i].login && inputPwd.value == users[i].pwd){
+                $('#frmLogin').css('display', 'none');
+                $('#ok').css('display', 'none');
+                $('#ko').css('display', 'block');
+            }else{
+                message.innerHTML = "Login ou mot de passe incorrect";
+                $('#mesage').css('color', 'red');
+            }
+        }
+    });
+}
+// gérer la déconnexion
+function deconnexion(){  
+    $('#ko').css('display', 'none');
+    $('#ok').css('display', 'block');
+}
+
+    
