@@ -12,6 +12,7 @@ let winesSize = 0;
 let arrayWines = [];
 let filtered = "";
 let order = false;
+let option = "";
 
 // chargement de la page
 window.onload = function(){
@@ -40,8 +41,9 @@ xhr.onload = function(){
         jsonToArray();
         getYears();
         getCountries();
-        filter();    
-    }    
+        sort();
+        filter();
+    }
     effetListe();
 }
 // erreurs au chargement de la page
@@ -51,7 +53,7 @@ xhr.onerror = function(){
 xhr.open('GET', apiURL + '/api/wines', true);
 xhr.send();
 
-// Effets mouseover et mouseout sur chaque élément de la liste des vins   
+// Effets mouseover et mouseout sur chaque élément de la liste des vins
 function effetListe(){
     $('.list-group-item').mouseover(function(){
         $(this).css('background-color', 'green');
@@ -105,8 +107,7 @@ function getCountries(){
         }
         return 0;
     });
-    console.log(trieCountries);
-    
+
     for(let j = 0; j < winesSize; j++){
         if(option.innerHTML !== trieCountries[j]['country']){
             countries[j] = trieCountries[j]['country'];
@@ -119,24 +120,23 @@ function getCountries(){
     }
 }
 // partie récupération des filtres (years)
+
 function getYears(){
     // Trie des années
    let trieYears = xhrContent.sort(function(a,b){
        return a.year - b.year;
    });
-   console.log(trieYears);
-   
+
    for(let i = 0; i < winesSize; i++){
-        option = document.createElement('option');
-        select = document.getElementById('years');
-        if(option.innerHTML !== trieYears[i]['year']){
-            years[i] = trieYears[i]['year'];
-            option.innerHTML = trieYears[i]['year'];
-            option.setAttribute("value", trieYears[i]['year']);
-            select.appendChild(option);
-        }
-   }    
-   
+       if(option.innerHTML !== trieYears[i]['year']){
+           countries[i] = trieYears[i]['year'];
+           option = document.createElement('option');
+           select = document.getElementById('years');
+           option.innerHTML = trieYears[i]['year'];
+           option.setAttribute("value", trieYears[i]['year']);
+           select.appendChild(option);
+       }
+   }
 }
 
 // afficher les éléments de chaque vin
@@ -190,7 +190,7 @@ function sort(){
 }
 
 // permet la filtration selon les critères sélectionnés
-function filter(){ 
+function filter(){
     let selectCountry = document.getElementById("countries");
     let selectedCountry = selectCountry.value;
     let selectYear = document.getElementById("years");
@@ -264,11 +264,11 @@ function search(element){
 
 // TODO ajouter une photo à un vin
 function addPicture(){
-    
+
     console.log('OK');
     //Afficher la boite de dialogue pour changer l'image
-    $('#pictureFile').css('display', 'block');   
-    
+    $('#pictureFile').css('display', 'block');
+
 }
 
 // TODO ajouter une note à un vin
