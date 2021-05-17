@@ -29,6 +29,9 @@ window.onload = function(){
     $('#ko').css('display', 'none');
     let btDeconnex = document.querySelector('#ko');
     btDeconnex.addEventListener('click', deconnexion);
+    //blockUsers
+    const blockUsers = document.querySelector('#block2');
+    blockUsers.hidden = true;
 
 }
 
@@ -66,6 +69,7 @@ function effetListe(){
     //connexion
     $('#ok').mouseover(function(){
         $(this).css('color', 'blue');
+        $(this).css('cursor', 'pointer');
         $(this).css('fontSize', '30px');
     });
     $('#ok').mouseout(function(){
@@ -75,6 +79,7 @@ function effetListe(){
     //déconnexion
     $('#ko').mouseover(function(){
         $(this).css('color', 'blue');
+        $(this).css('cursor', 'pointer');
         $(this).css('fontSize', '30px');
     });
     $('#ko').mouseout(function(){
@@ -270,12 +275,10 @@ function search(element){
 }
 
 // TODO ajouter une photo à un vin
-function addPicture(){
-    
+function addPicture(){     
     console.log('OK');
     //Afficher la boite de dialogue pour changer l'image
-    $('#pictureFile').css('display', 'block');   
-    
+    $('#pictureFile').css('display', 'block');
 }
 
 // TODO ajouter une note à un vin
@@ -292,6 +295,8 @@ function like(wine){
 // gérer la connexion
 function connexion(){
     $('#frmLogin').css('display', 'none');
+
+    $('#addPicNoteLike').css('display', 'none');
     
     $('#ok').click(function(){
         $('#frmLogin').css('display', 'block');
@@ -382,10 +387,11 @@ function connexion(){
     for(let i=0; i<users.length; i++){
         console.log(users[i]);
     }
-    // Tgérer les utilisateurs autorisés  
+    // Tgérer les utilisateurs autorisés      
     let inputLogin = document.querySelector('#frmLogin > input[type=text]');
     let inputPwd = document.querySelector('#frmLogin > input[type=password]');
-    const btValider = document.querySelector('#frmLogin > input.btn.btn-success');
+    const btValider = document.querySelector('#frmLogin > input.btn.btn-success');    
+    const blockUsers = document.querySelector('#block2');
     //let btConnex = document.querySelector('#ok');    
     let message = document.querySelector('#mesage');
    
@@ -398,6 +404,8 @@ function connexion(){
                 $('#frmLogin').css('display', 'none');
                 $('#ok').css('display', 'none');
                 $('#ko').css('display', 'block');
+                $('#addPicNoteLike').css('display', 'block');
+                blockUsers.hidden = false;
             }else{
                 message.innerHTML = "Login ou mot de passe incorrect";
                 $('#mesage').css('color', 'red');
@@ -409,6 +417,7 @@ function connexion(){
 function deconnexion(){  
     $('#ko').css('display', 'none');
     $('#ok').css('display', 'block');
+    $('#addPicNoteLike').css('display', 'none');
 }
 
     
