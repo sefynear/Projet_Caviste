@@ -30,8 +30,8 @@ window.onload = function(){
     let btDeconnex = document.querySelector('#ko');
     btDeconnex.addEventListener('click', deconnexion);
     //blockUsers
-    const blockUsers = document.querySelector('#block2');
-    blockUsers.hidden = true;
+    //const blockUsers = document.querySelector('#block2');
+    //blockUsers.hidden = true;
 
 }
 
@@ -195,6 +195,8 @@ function showWine(wines){
             color.innerHTML = wines[list[i].id]['color'];
             let price = document.getElementById("price");
             price.innerHTML = wines[list[i].id]['price'];
+            let descriptionWine = document.querySelector('#nav-44518-content-1');
+            descriptionWine.innerHTML =  wines[list[i].id]['description'];
         });
     }
 }
@@ -210,6 +212,8 @@ function filter(){
     let selectedCountry = selectCountry.value;
     let selectYear = document.getElementById("years");
     let selectedYear = selectYear.value;
+    let descriptionWine = document.querySelector('#nav-44518-content-1');
+    descriptionWine.innerHTML =  "";
 
     // cas où un pays et une année ont été sélectionnés
     if(selectedCountry != 'all' && selectedYear != 'all'){
@@ -240,38 +244,22 @@ function filter(){
 
 // TODO rechercher un element
 function search(element){                
-                const inputSearch = document.querySelector('#inputKey');
-                let keyword = inputSearch.value;
-                let reg = new RegExp(keyword, 'i');
-                // console.log(keyword.length);
-                let tabVins = [];
-                Object.values(data).forEach(function(vin){
-                    if(vin.name.search(reg) != -1){
-                        tabVins.push(vin);
-                    }
-                    else if((keyword.length <= 2) && (vin.id.search(reg) != -1)){
-                        tabVins.push(vin);            
-                    }
-                    else if((keyword.length == 4) && (vin.year.search(reg) != -1)){
-                        tabVins.push(vin);
-                    }        
-                })
-                // Affichage de descriptions d'un vin
-                for(let i=1; i<13; i++){
-                    imgAffiche.src = pictureURL + tabVins[0].picture; 
-                    allDescription[0].innerHTML = tabVins[0].grapes;
-                    allDescription[1].innerHTML = tabVins[0].country;
-                    allDescription[2].innerHTML = tabVins[0].region;
-                    allDescription[3].innerHTML = data[i].year;
-                    allDescription[4].innerHTML = tabVins[0].capacity;
-                    allDescription[5].innerHTML = tabVins[0].color;
-                    allDescription[6].innerHTML = tabVins[0].price;
-                    idDescription.innerHTML = '#' + tabVins[0].id;
-                    nameDescription.innerHTML = tabVins[0].name;                                  
-                    list[i-1].innerHTML = '';
-                }                                                    
-                list[0].innerHTML = tabVins[0].name;
-
+    const inputSearch = document.querySelector('#inputKey');
+    let keyword = inputSearch.value;
+    let reg = new RegExp(keyword, 'i');
+    // console.log(keyword.length);
+    let tabVins = [];
+    Object.values(data).forEach(function(vin){
+        if(vin.name.search(reg) != -1){
+            tabVins.push(vin);
+        }
+        else if((keyword.length <= 2) && (vin.id.search(reg) != -1)){
+            tabVins.push(vin);            
+        }
+        else if((keyword.length == 4) && (vin.year.search(reg) != -1)){
+            tabVins.push(vin);
+        }        
+    })
 }
 
 // TODO ajouter une photo à un vin
@@ -391,7 +379,7 @@ function connexion(){
     let inputLogin = document.querySelector('#frmLogin > input[type=text]');
     let inputPwd = document.querySelector('#frmLogin > input[type=password]');
     const btValider = document.querySelector('#frmLogin > input.btn.btn-success');    
-    const blockUsers = document.querySelector('#block2');
+    //const blockUsers = document.querySelector('#block2');
     //let btConnex = document.querySelector('#ok');    
     let message = document.querySelector('#mesage');
    
@@ -404,7 +392,7 @@ function connexion(){
                 $('#frmLogin').css('display', 'none');
                 $('#ok').css('display', 'none');
                 $('#ko').css('display', 'block');
-                $('#addPicNoteLike').css('display', 'block');
+                //$('#addPicNoteLike').css('display', 'block');
                 blockUsers.hidden = false;
             }else{
                 message.innerHTML = "Login ou mot de passe incorrect";
