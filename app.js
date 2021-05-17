@@ -10,16 +10,19 @@ const apiURL = 'http://cruth.phpnet.org/epfc/caviste/public/index.php';
 const pictureURL ='file:///C:/Users/BelAgencyWeb/Desktop/Caviste/images/pics/';
 let winesSize = 0;
 let arrayWines = [];
-
+let filtered = "";
+let order = false;
 
 // chargement de la page
 window.onload = function(){
     let btFilter = document.getElementById("btFilter");
-    //let btSort = document.getElementById("btSort"); //TODO
     btFilter.addEventListener('click', filter);
-    //btSort.addEventListener('click', sort); //TODO
+
     let btSearch = document.getElementById("btSearch");
     btSearch.addEventListener('click', search);
+    let btSort = document.getElementById("btSort");
+    btSort.addEventListener('click', sort);
+
     //btAddImg.addEventListener('click', addPicture(wine)); TODO
     $('#pictureFile').css('display', 'none');
     let btAddImg = document.querySelector('#description > div > i.fas.fa-camera');
@@ -172,8 +175,18 @@ function showWine(wines){
 }
 
 // TODO trier sur base de l'element
-function sortBy(element){
-    //sort(a, b) TODO
+function sort(){
+    order = !order;
+
+    if(order){
+        showWines(xhrContent.sort((a, b) => a.name !== b.name ? a.name < b.name ? -1 : 1 : 0));
+    }
+    else{
+        showWines(xhrContent.sort((a, b) => a.name !== b.name ? a.name > b.name ? -1 : 1 : 0));
+    }
+        if(filtered){
+            filter();
+    }
 }
 
 // permet la filtration selon les critères sélectionnés
@@ -186,16 +199,19 @@ function filter(){
     // cas où un pays et une année ont été sélectionnés
     if(selectedCountry != 'all' && selectedYear != 'all'){
         showWines(xhrContent.filter(element => element.country == selectedCountry && element.year == selectedYear));
+        filtered = true;
     }
 
     // cas où seul un pays a été sélectionné
     else if(selectedCountry != 'all' && selectedYear == 'all'){
         showWines(xhrContent.filter(element => element.country == selectedCountry));
+        filtered = true;
     }
 
     // cas où seul une année a été sélectionnée
     else if(selectedCountry == 'all' && selectedYear != 'all'){
         showWines(xhrContent.filter(element => element.year == selectedYear));
+        filtered = true;
     }
 
     else{
@@ -211,26 +227,26 @@ function filter(){
 }
 
 // TODO rechercher un element
-function search(element){                
+function search(element){
                 const inputSearch = document.querySelector('#inputKey');
                 let keyword = inputSearch.value;
                 let reg = new RegExp(keyword, 'i');
                 // console.log(keyword.length);
                 let tabVins = [];
-                Object.values(data).forEach(function(vin){
+                Object.keys(data).forEach(function(vin){
                     if(vin.name.search(reg) != -1){
                         tabVins.push(vin);
                     }
                     else if((keyword.length <= 2) && (vin.id.search(reg) != -1)){
-                        tabVins.push(vin);            
+                        tabVins.push(vin);
                     }
                     else if((keyword.length == 4) && (vin.year.search(reg) != -1)){
                         tabVins.push(vin);
-                    }        
+                    }
                 })
                 // Affichage de descriptions d'un vin
                 for(let i=1; i<13; i++){
-                    imgAffiche.src = pictureURL + tabVins[0].picture; 
+                    imgAffiche.src = pictureURL + tabVins[0].picture;
                     allDescription[0].innerHTML = tabVins[0].grapes;
                     allDescription[1].innerHTML = tabVins[0].country;
                     allDescription[2].innerHTML = tabVins[0].region;
@@ -239,9 +255,9 @@ function search(element){
                     allDescription[5].innerHTML = tabVins[0].color;
                     allDescription[6].innerHTML = tabVins[0].price;
                     idDescription.innerHTML = '#' + tabVins[0].id;
-                    nameDescription.innerHTML = tabVins[0].name;                                  
+                    nameDescription.innerHTML = tabVins[0].name;
                     list[i-1].innerHTML = '';
-                }                                                    
+                }
                 list[0].innerHTML = tabVins[0].name;
 
 }
