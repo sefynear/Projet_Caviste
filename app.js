@@ -7,7 +7,7 @@ let years = [];
 let li = "";
 let ul = "";
 const apiURL = 'http://cruth.phpnet.org/epfc/caviste/public/index.php';
-const pictureURL ='file:///C:/Users/BelAgencyWeb/Desktop/Projet_Caviste/images/pics/';
+const pictureURL ='http://cruth.phpnet.org/epfc/caviste/public/pics/';
 let winesSize = 0;
 let arrayWines = [];
 
@@ -17,8 +17,8 @@ window.onload = function(){
     //let btSort = document.getElementById("btSort"); //TODO
     btFilter.addEventListener('click', filter);
     //btSort.addEventListener('click', sort); //TODO
-    let btSearch = document.getElementById("btSearch");
-    btSearch.addEventListener('click', search);
+    // let btSearch = document.getElementById("btSearch");
+    // btSearch.addEventListener('click', search);
     //btAddImg.addEventListener('click', addPicture(wine)); TODO
     $('#pictureFile').css('display', 'none');
     let btAddImg = document.querySelector('#description > div > i.fas.fa-camera');
@@ -29,9 +29,13 @@ window.onload = function(){
     $('#ko').css('display', 'none');
     let btDeconnex = document.querySelector('#ko');
     btDeconnex.addEventListener('click', deconnexion);
-    //blockUsers
-    //const blockUsers = document.querySelector('#block2');
-    //blockUsers.hidden = true;
+    //add note    
+    $('#commentaire').css('display', 'none');
+    const btNote = document.querySelector('#addPicNoteLike > i.fas.fa-pencil-alt');
+    btNote.addEventListener('click', addComments);
+    //send comments
+    const btEnvoyer = document.querySelector('#commentaire > button');
+    btEnvoyer.addEventListener('click', sendComments);   
 
 }
 
@@ -99,7 +103,7 @@ function jsonToArray(){
 
 // afficher les vins
 function showWines(wines = xhrContent){
-    console.log(wines);
+    //console.log(wines);
     // boucle pour récupérer les données individuellement
     // on crée une balise li pour chaque élément
     $('.list-group-item').remove();
@@ -130,7 +134,7 @@ function getCountries(){
         }
         return 0;
     });
-    console.log(trieCountries);
+    //console.log(trieCountries);
     
     for(let j = 0; j < winesSize; j++){
         if(option.innerHTML !== trieCountries[j]['country']){
@@ -149,7 +153,7 @@ function getYears(){
    let trieYears = xhrContent.sort(function(a,b){
        return a.year - b.year;
    });
-   console.log(trieYears);
+   //console.log(trieYears);
    
    for(let i = 0; i < winesSize; i++){
         option = document.createElement('option');
@@ -197,6 +201,9 @@ function showWine(wines){
             price.innerHTML = wines[list[i].id]['price'];
             let descriptionWine = document.querySelector('#nav-44518-content-1');
             descriptionWine.innerHTML =  wines[list[i].id]['description'];
+
+            //Afficher les commentaires des users
+            afficherComments();
         });
     }
 }
@@ -243,24 +250,6 @@ function filter(){
 }
 
 // TODO rechercher un element
-function search(element){                
-    const inputSearch = document.querySelector('#inputKey');
-    let keyword = inputSearch.value;
-    let reg = new RegExp(keyword, 'i');
-    // console.log(keyword.length);
-    let tabVins = [];
-    Object.values(data).forEach(function(vin){
-        if(vin.name.search(reg) != -1){
-            tabVins.push(vin);
-        }
-        else if((keyword.length <= 2) && (vin.id.search(reg) != -1)){
-            tabVins.push(vin);            
-        }
-        else if((keyword.length == 4) && (vin.year.search(reg) != -1)){
-            tabVins.push(vin);
-        }        
-    })
-}
 
 // TODO ajouter une photo à un vin
 function addPicture(){     
@@ -269,18 +258,110 @@ function addPicture(){
     $('#pictureFile').css('display', 'block');
 }
 
-// TODO ajouter une note à un vin
-function addNote(wine){
-
-}
-
-// TODO ajouter un j'aime à un vin
-function like(wine){
-// TODO un utilisateur ne peut aimer 2 fois un vin
-
-}
-
 // gérer la connexion
+//Liste Users
+let users = [
+    {
+        id: 1,
+        name: 'ced',
+        pwd: 123
+    },
+    {
+        id: 2,
+        name: 'bob',
+        pwd: 123
+    },
+    {
+        id: 25,
+        name: 'mehdi',
+        pwd: 123
+    },
+    {
+        id: 26,
+        name: 'youssef',
+        pwd: 123
+    },
+    {
+        id: 27,
+        name: 'mamadou',
+        pwd: 123
+    },
+    {
+        id: 28,
+        name: 'manuel',
+        pwd: 123
+    },
+    {
+        id: 29,
+        name: 'alain',
+        pwd: 123
+    },
+    {
+        id: 30,
+        name: 'alexandre',
+        pwd: 123
+    },
+    {
+        id: 31,
+        name: 'fred',
+        pwd: 123
+    },
+    {
+        id: 32,
+        name: 'ali',
+        pwd: 123
+    },
+    {
+        id: 33,
+        name: 'angeline',
+        pwd: 123
+    },
+    {
+        id: 34,
+        name: 'sylwester',
+        pwd: 123
+    },
+    {
+        id: 35,
+        name: 'alessandro',
+        pwd: 123
+    },
+    {
+        id: 36,
+        login: 'rachida',
+        pwd: 123
+    },
+    {
+        id: 37,
+        name: 'badredddine',
+        pwd: 123
+    },
+    {
+        id: 38,
+        name: 'amandine',
+        pwd: 123
+    },
+    {
+        id: 39,
+        name: 'guilherme',
+        pwd: 123
+    },
+    {
+        id: 40,
+        name: 'lauren',
+        pwd: 123
+    },
+    {
+        id: 41,
+        name: 'ismael',
+        pwd: 123
+    },
+    {
+        id: 42,
+        name: 'aboubacar',
+        pwd: 123
+    },
+];
 function connexion(){
     $('#frmLogin').css('display', 'none');
 
@@ -289,93 +370,11 @@ function connexion(){
     $('#ok').click(function(){
         $('#frmLogin').css('display', 'block');
     });
-    //Liste Users
-    let users = [
-        {
-            login: 'ced',
-            pwd: 1
-        },
-        {
-            login: 'bob',
-            pwd: 2
-        },
-        {
-            login: 'mehdi',
-            pwd: 25
-        },
-        {
-            login: 'youssef',
-            pwd: 26
-        },
-        {
-            login: 'mamadou',
-            pwd: 27
-        },
-        {
-            login: 'manuel',
-            pwd: 28
-        },
-        {
-            login: 'alain',
-            pwd: 29
-        },
-        {
-            login: 'alexandre',
-            pwd: 30
-        },
-        {
-            login: 'fred',
-            pwd: 31
-        },
-        {
-            login: 'ali',
-            pwd: 32
-        },
-        {
-            login: 'angeline',
-            pwd: 33
-        },
-        {
-            login: 'sylwester',
-            pwd: 34
-        },
-        {
-            login: 'alessandro',
-            pwd: 35
-        },
-        {
-            login: 'rachida',
-            pwd: 36
-        },
-        {
-            login: 'badredddine',
-            pwd: 37
-        },
-        {
-            login: 'amandine',
-            pwd: 38
-        },
-        {
-            login: 'guilherme',
-            pwd: 39
-        },
-        {
-            login: 'lauren',
-            pwd: 40
-        },
-        {
-            login: 'ismael',
-            pwd: 41
-        },
-        {
-            login: 'aboubacar',
-            pwd: 42
-        },
-    ];
-    for(let i=0; i<users.length; i++){
-        console.log(users[i]);
-    }
-    // Tgérer les utilisateurs autorisés      
+    
+    // for(let i=0; i<users.length; i++){
+    //     console.log(users[i]);
+    // }
+    // gérer les utilisateurs autorisés      
     let inputLogin = document.querySelector('#frmLogin > input[type=text]');
     let inputPwd = document.querySelector('#frmLogin > input[type=password]');
     const btValider = document.querySelector('#frmLogin > input.btn.btn-success');    
@@ -388,12 +387,12 @@ function connexion(){
 
         //Connexion
         for(let i=0; i<users.length; i++){
-            if(inputLogin.value == users[i].login && inputPwd.value == users[i].pwd){
+            if(inputLogin.value == users[i].name && inputPwd.value == users[i].pwd){
                 $('#frmLogin').css('display', 'none');
                 $('#ok').css('display', 'none');
                 $('#ko').css('display', 'block');
-                //$('#addPicNoteLike').css('display', 'block');
-                blockUsers.hidden = false;
+                $('#addPicNoteLike').css('display', 'block');
+                //blockUsers.hidden = false;
             }else{
                 message.innerHTML = "Login ou mot de passe incorrect";
                 $('#mesage').css('color', 'red');
@@ -408,4 +407,100 @@ function deconnexion(){
     $('#addPicNoteLike').css('display', 'none');
 }
 
+// afficher les commentaires du vin
+function afficherComments(){
+    let idAf = document.querySelector('#description > span');
+    const idWine = (idAf.innerHTML).split('# ');
+    let inputLogin = document.querySelector('#frmLogin > input[type=text]');
+    let inputPwd = document.querySelector('#frmLogin > input[type=password]');
+    let tabComments = [];
+    let loginUser = inputLogin.value; 
+    let pwdUser = inputPwd.value; 
+    const credentials = btoa(loginUser+':'+ pwdUser);
+    const afficheNote = document.querySelector('#nav-44518-content-2'); //affichage des commentaires
+    //if(loginUser != ""){
+        let cpt = 1;
+        let wineId = idWine[1];
+        const options = {
+            'method': 'GET',
+            //'mode': 'cors',
+            //'headers': {
+                //'content-type': 'application/json; charset=utf-8',
+                //'Authorization': 'Basic '+ credentials  //Try with other credentials (login:password)
+            //}
+        };
+
+        const fetchURL = '/api/wines/'+wineId+'/comments';
+        
+        fetch(apiURL + fetchURL, options).then(function(response) {
+            if(response.ok) {
+                response.json().then(function(data){
+                    console.log(data);
+                    if(data.length != 0){
+                        for(let i=0; i<data.length; i++){
+                            console.log(data[i].content);
+                            for(let j=0; j<users.length; j++){
+                                if(users[j].id == data[i].user_id){
+                                    tabComments.push(cpt + '.' + data[i].content + ' ( ' + users[j].name  + ' )' + '<br>');
+                                }
+                            }
+                            
+                            cpt++;
+                        }
+                        afficheNote.innerHTML = tabComments;
+                    }else{
+                        afficheNote.innerHTML = "Pas de commentaires"
+                    }
+                });
+            }
+        });
+    // }else{
+    //     console.log('KO');
+    // }
+}
+//Ajouter un commentaire
+function addComments(){
+    $('#commentaire').css('display', 'block');
+}
+function sendComments(){
+    $('#commentaire').css('display', 'none');
+    let idAf = document.querySelector('#description > span');
+    const idWine = (idAf.innerHTML).split('# ');
+    let inputLogin = document.querySelector('#frmLogin > input[type=text]');
+    let inputPwd = document.querySelector('#frmLogin > input[type=password]');    
+    let loginUser = inputLogin.value;
+    let pwdUser = inputPwd.value;
+    const credentials = btoa(loginUser+':'+ pwdUser);
+    const commentaire = document.querySelector('#comments').value;   
+    let commentSend = { "content" : commentaire };
+    let wineId = idWine[1];
+	const options = {
+        'method': 'POST',
+        'body': JSON.stringify(commentSend),	
+        'mode': 'cors',
+        'headers': {
+            'content-type': 'application/json; charset=utf-8',
+            'Authorization': 'Basic ' + credentials
+        }
+    };
+    
+    const fetchURL = '/api/wines/'+wineId+'/comments';
+    
+    fetch(apiURL + fetchURL, options).then(function(response) {
+        if(response.ok) {
+            response.json().then(function(data){
+                console.log(data);
+            });
+        }
+        else{
+            console.log('Not ok');
+        }
+    });
+}
+
+// TODO ajouter un j'aime à un vin
+function like(wine){
+    // TODO un utilisateur ne peut aimer 2 fois un vin
+    
+    }
     
