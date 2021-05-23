@@ -13,7 +13,9 @@ let arrayWines = [];
 let filtered = false;
 let order = false;
 let option = "";
-
+let likes = "";
+let userLiked = false;
+let userLikes = [];
 
 
 // chargement de la page
@@ -43,7 +45,7 @@ window.onload = function(){
     const btEnvoyer = document.querySelector('#commentaire > button');
     btEnvoyer.addEventListener('click', sendComments);
      //like
-     const btLike = document.querySelector('#addPicNoteLike > i.fab.fa-gratipay');
+     const btLike = document.getElementById("btLike");
      btLike.addEventListener('click', like);
     // effets sur btCommentaires
     let btCommentaires = document.querySelector('#nav-44518-tab-2');
@@ -51,7 +53,7 @@ window.onload = function(){
         //description
         $('#nav-44518-tab > li:nth-child(1) > a').css('backgroundColor', 'white');
         $('#nav-44518-tab > li:nth-child(1) > a').css('color', 'blue');
-        //commentaires  
+        //commentaires
         $('#nav-44518-tab-2').css('backgroundColor', 'blue');
         $('#nav-44518-tab-2').css('color', 'white');
         //pays producteurs
@@ -67,7 +69,7 @@ window.onload = function(){
         //description
         $('#nav-44518-tab > li:nth-child(1) > a').css('backgroundColor', 'blue');
         $('#nav-44518-tab > li:nth-child(1) > a').css('color', 'white');
-        //commentaires  
+        //commentaires
         $('#nav-44518-tab-2').css('backgroundColor', 'white');
         $('#nav-44518-tab-2').css('color', 'blue');
         //pays producteurs
@@ -83,7 +85,7 @@ window.onload = function(){
         //description
         $('#nav-44518-tab > li:nth-child(1) > a').css('backgroundColor', 'white');
         $('#nav-44518-tab > li:nth-child(1) > a').css('color', 'blue');
-        //commentaires  
+        //commentaires
         $('#nav-44518-tab-2').css('backgroundColor', 'white');
         $('#nav-44518-tab-2').css('color', 'blue');
         //pays producteurs
@@ -95,9 +97,11 @@ window.onload = function(){
         let afficheCountries = document.querySelector('#nav-44518-content-4');
         let tabCountries = [];
         for(let l=0; l<xhrContent.length; l++){
-            tabCountries[l] = xhrContent[l].country;                    
+            tabCountries[l] = xhrContent[l].country;
         }
+        tabCountries = Array.from(new Set(tabCountries));
         afficheCountries.innerHTML = tabCountries;
+
     }
     // effets sur btVinsPréférés
     let btVinsPréférés = document.querySelector('#nav-44518-tab-5');
@@ -105,7 +109,7 @@ window.onload = function(){
         //description
         $('#nav-44518-tab > li:nth-child(1) > a').css('backgroundColor', 'white');
         $('#nav-44518-tab > li:nth-child(1) > a').css('color', 'blue');
-        //commentaires  
+        //commentaires
         $('#nav-44518-tab-2').css('backgroundColor', 'white');
         $('#nav-44518-tab-2').css('color', 'blue');
         //pays producteurs
@@ -268,6 +272,7 @@ function getYears(){
    for(let i = 0; i < winesSize; i++){
 
         if(option.innerHTML !== trieYears[i]['year']){
+
            years[i] = trieYears[i]['year'];
            option = document.createElement('option');
            select = document.getElementById('years');
@@ -313,6 +318,7 @@ function showWine(wines){
             let descriptionWine = document.querySelector('#nav-44518-content-1');
             descriptionWine.innerHTML =  wines[list[i].id]['description'];
 
+            getLikes(wines[list[i].id]['id']);
             //Afficher les commentaires des users
             afficherComments();
         });
@@ -386,40 +392,68 @@ function addNote(wine){
 
 }
 
+// récupère les likes des vins de l'api
+function getLikes(wineId){
+    let affLike = document.querySelector('#addPicNoteLike > span');
+
+	const xhr = new XMLHttpRequest();
+	xhr.onreadystatechange = function () {
+		if (this.readyState == 4 && this.status == 200) {
+			let data = xhr.responseText;
+			let likes = JSON.parse(data);
+            if(userLiked && userLikes.includes(wineId)){
+                affLike.innerHTML=parseInt(likes.total)+1;
+            }
+            else{
+                affLike.innerHTML=parseInt(likes.total);
+            }
+
+
+		}
+	};
+	xhr.open("GET", apiURL+'/api/wines/'+wineId+'/likes-count', true);
+	xhr.send();
+}
+
 // ajouter un j'aime à un vin
-let cptLike = 0;
+
 function like(){
     let idAf = document.querySelector('#description > span');
     let idWine = (idAf.innerHTML).split('# ');
     let inputLogin = document.querySelector('#frmLogin > input[type=text]');
-    let inputPwd = document.querySelector('#frmLogin > input[type=password]');    
+    let inputPwd = document.querySelector('#frmLogin > input[type=password]');
     let loginUser = inputLogin.value;
     let pwdUser = inputPwd.value;
     let affLike = document.querySelector('#addPicNoteLike > span');
-    const credentials = btoa(loginUser+':'+ pwdUser);    
+    const credentials = btoa(loginUser+':'+ pwdUser);
     const wineId = idWine[1];
 	const options = {
         'method': 'PUT',
-        'body': JSON.stringify({ "like" : true }),	
+        'body': JSON.stringify({ "like" : true }),
         'mode': 'cors',
         'headers': {
             'content-type': 'application/json; charset=utf-8',
-            'Authorization': 'Basic '+ credentials	
+            'Authorization': 'Basic '+ credentials
         }
     };
-    
+
     const fetchURL = '/api/wines/'+wineId+'/like';
-    
+
     fetch(apiURL + fetchURL, options).then(function(response) {
         if(response.ok) {
             response.json().then(function(data){
                 console.log(data);
-                cptLike++;
-                affLike.innerHTML = cptLike;
+
+                if(!userLikes.includes(wineId)){
+                        userLiked = true;
+                        userLikes.push(wineId);
+                        getLikes(wineId);
+                }
             });
         }
+
     });
-    
+
 }
 
 // afficher les commentaires du vin
@@ -621,19 +655,19 @@ function connexion(){
     $('#frmLogin').css('display', 'none');
 
     $('#addPicNoteLike').css('display', 'none');
-    
+
     $('#ok').click(function(){
         $('#frmLogin').css('display', 'block');
     });
-    
-    // gérer les utilisateurs autorisés      
+
+    // gérer les utilisateurs autorisés
     let inputLogin = document.querySelector('#frmLogin > input[type=text]');
     let inputPwd = document.querySelector('#frmLogin > input[type=password]');
-    const btValider = document.querySelector('#frmLogin > input.btn.btn-success');    
+    const btValider = document.querySelector('#frmLogin > input.btn.btn-success');
     //const blockUsers = document.querySelector('#block2');
-    //let btConnex = document.querySelector('#ok');    
+    //let btConnex = document.querySelector('#ok');
     let message = document.querySelector('#mesage');
-   
+
     btValider.addEventListener('click', function(e){
         e.preventDefault();
 
@@ -662,7 +696,7 @@ function deconnexion(){
 let dataWines ;
 let nbWineArgentina,nbWineFrance,nbWinesItaly,nbWineSpain,nbWineUSA  ;
 let cptWineArg = 0;
-let cptWineFr = 0; 
+let cptWineFr = 0;
 let cptWineIta = 0;
 let cptWineSpa = 0;
 let cptWineUs = 0;
@@ -701,7 +735,7 @@ fetch(apiURL+'/api/wines')
         nbWineUSA = cptWineUs;
         //console.log(cptWineUs);
 
-        // creation of the charts 
+        // creation of the charts
         let myLabel = ['Argentina','France','Italy','Spain','USA'];
         let myData = [nbWineArgentina,nbWineFrance,nbWinesItaly,nbWineSpain,nbWineUSA];
 
