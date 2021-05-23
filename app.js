@@ -42,7 +42,79 @@ window.onload = function(){
     //send comments
     const btEnvoyer = document.querySelector('#commentaire > button');
     btEnvoyer.addEventListener('click', sendComments);
-
+     //like
+     const btLike = document.querySelector('#addPicNoteLike > i.fab.fa-gratipay');
+     btLike.addEventListener('click', like);
+    // effets sur btCommentaires
+    let btCommentaires = document.querySelector('#nav-44518-tab-2');
+    btCommentaires.onclick = function(){
+        //description
+        $('#nav-44518-tab > li:nth-child(1) > a').css('backgroundColor', 'white');
+        $('#nav-44518-tab > li:nth-child(1) > a').css('color', 'blue');
+        //commentaires  
+        $('#nav-44518-tab-2').css('backgroundColor', 'blue');
+        $('#nav-44518-tab-2').css('color', 'white');
+        //pays producteurs
+        $('#nav-44518-tab-4').css('backgroundColor', 'white');
+        $('#nav-44518-tab-4').css('color', 'blue');
+        //vins préférés
+        $('#nav-44518-tab-5').css('backgroundColor', 'white');
+        $('#nav-44518-tab-5').css('color', 'blue');
+    }
+    // effets sur btDescriptions
+    let btDescription = document.querySelector('#nav-44518-tab > li:nth-child(1) > a');
+    btDescription.onclick = function(){
+        //description
+        $('#nav-44518-tab > li:nth-child(1) > a').css('backgroundColor', 'blue');
+        $('#nav-44518-tab > li:nth-child(1) > a').css('color', 'white');
+        //commentaires  
+        $('#nav-44518-tab-2').css('backgroundColor', 'white');
+        $('#nav-44518-tab-2').css('color', 'blue');
+        //pays producteurs
+        $('#nav-44518-tab-4').css('backgroundColor', 'white');
+        $('#nav-44518-tab-4').css('color', 'blue');
+        //vins préférés
+        $('#nav-44518-tab-5').css('backgroundColor', 'white');
+        $('#nav-44518-tab-5').css('color', 'blue');
+    }
+    // effets sur btPaysProducteurs
+    let btPaysProd = document.querySelector('#nav-44518-tab-4');
+    btPaysProd.onclick = function(){
+        //description
+        $('#nav-44518-tab > li:nth-child(1) > a').css('backgroundColor', 'white');
+        $('#nav-44518-tab > li:nth-child(1) > a').css('color', 'blue');
+        //commentaires  
+        $('#nav-44518-tab-2').css('backgroundColor', 'white');
+        $('#nav-44518-tab-2').css('color', 'blue');
+        //pays producteurs
+        $('#nav-44518-tab-4').css('backgroundColor', 'blue');
+        $('#nav-44518-tab-4').css('color', 'white');
+        //vins préférés
+        $('#nav-44518-tab-5').css('backgroundColor', 'white');
+        $('#nav-44518-tab-5').css('color', 'blue');
+        let afficheCountries = document.querySelector('#nav-44518-content-4');
+        let tabCountries = [];
+        for(let l=0; l<xhrContent.length; l++){
+            tabCountries[l] = xhrContent[l].country;                    
+        }
+        afficheCountries.innerHTML = tabCountries;
+    }
+    // effets sur btVinsPréférés
+    let btVinsPréférés = document.querySelector('#nav-44518-tab-5');
+    btVinsPréférés.onclick = function(){
+        //description
+        $('#nav-44518-tab > li:nth-child(1) > a').css('backgroundColor', 'white');
+        $('#nav-44518-tab > li:nth-child(1) > a').css('color', 'blue');
+        //commentaires  
+        $('#nav-44518-tab-2').css('backgroundColor', 'white');
+        $('#nav-44518-tab-2').css('color', 'blue');
+        //pays producteurs
+        $('#nav-44518-tab-4').css('backgroundColor', 'white');
+        $('#nav-44518-tab-4').css('color', 'blue');
+        //vins préférés
+        $('#nav-44518-tab-5').css('backgroundColor', 'blue');
+        $('#nav-44518-tab-5').css('color', 'white');
+    }
     //recherche dynamique sans boutton
     $(document).ready(function(){
                $('#inputKey').keyup(function(){
@@ -314,10 +386,40 @@ function addNote(wine){
 
 }
 
-// TODO ajouter un j'aime à un vin
-function like(wine){
-// TODO un utilisateur ne peut aimer 2 fois un vin
-
+// ajouter un j'aime à un vin
+let cptLike = 0;
+function like(){
+    let idAf = document.querySelector('#description > span');
+    let idWine = (idAf.innerHTML).split('# ');
+    let inputLogin = document.querySelector('#frmLogin > input[type=text]');
+    let inputPwd = document.querySelector('#frmLogin > input[type=password]');    
+    let loginUser = inputLogin.value;
+    let pwdUser = inputPwd.value;
+    let affLike = document.querySelector('#addPicNoteLike > span');
+    const credentials = btoa(loginUser+':'+ pwdUser);    
+    const wineId = idWine[1];
+	const options = {
+        'method': 'PUT',
+        'body': JSON.stringify({ "like" : true }),	
+        'mode': 'cors',
+        'headers': {
+            'content-type': 'application/json; charset=utf-8',
+            'Authorization': 'Basic '+ credentials	
+        }
+    };
+    
+    const fetchURL = '/api/wines/'+wineId+'/like';
+    
+    fetch(apiURL + fetchURL, options).then(function(response) {
+        if(response.ok) {
+            response.json().then(function(data){
+                console.log(data);
+                cptLike++;
+                affLike.innerHTML = cptLike;
+            });
+        }
+    });
+    
 }
 
 // afficher les commentaires du vin
@@ -524,9 +626,6 @@ function connexion(){
         $('#frmLogin').css('display', 'block');
     });
     
-    // for(let i=0; i<users.length; i++){
-    //     console.log(users[i]);
-    // }
     // gérer les utilisateurs autorisés      
     let inputLogin = document.querySelector('#frmLogin > input[type=text]');
     let inputPwd = document.querySelector('#frmLogin > input[type=password]');
