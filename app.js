@@ -376,10 +376,6 @@ function filter(){
     effetListe();
 }
 
-function wineDescription(){
-
-}
-
 // TODO ajouter une photo à un vin
 function addPicture(){
     console.log('OK');
@@ -407,8 +403,6 @@ function getLikes(wineId){
             else{
                 affLike.innerHTML=parseInt(likes.total);
             }
-
-
 		}
 	};
 	xhr.open("GET", apiURL+'/api/wines/'+wineId+'/likes-count', true);
