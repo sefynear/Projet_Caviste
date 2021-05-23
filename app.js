@@ -7,29 +7,42 @@ let years = [];
 let li = "";
 let ul = "";
 const apiURL = 'http://cruth.phpnet.org/epfc/caviste/public/index.php';
-const pictureURL ='file:///C:/Users/BelAgencyWeb/Desktop/Caviste/images/pics/';
+const pictureURL ='http://cruth.phpnet.org/epfc/caviste/public/pics/';
 let winesSize = 0;
 let arrayWines = [];
-let filtered = "";
+let filtered = false;
 let order = false;
 let option = "";
+
 
 // chargement de la page
 window.onload = function(){
     let btFilter = document.getElementById("btFilter");
-    btFilter.addEventListener('click', filter);
-
-    let btSearch = document.getElementById("btSearch");
-    btSearch.addEventListener('click', search);
     let btSort = document.getElementById("btSort");
+    btFilter.addEventListener('click', filter);
     btSort.addEventListener('click', sort);
 
-    //btAddImg.addEventListener('click', addPicture(wine)); TODO
     $('#pictureFile').css('display', 'none');
+
     let btAddImg = document.querySelector('#description > div > i.fas.fa-camera');
     btAddImg.addEventListener('click', addPicture);
+
     let pictureFile = document.querySelector('#pictureFile');
     pictureFile.addEventListener('change', addPicture);
+
+    //déconnexion
+    $('#ko').css('display', 'none');
+    let btDeconnex = document.querySelector('#ko');
+    btDeconnex.addEventListener('click', deconnexion);
+
+    //add note
+    $('#commentaire').css('display', 'none');
+    const btNote = document.querySelector('#addPicNoteLike > i.fas.fa-pencil-alt');
+    btNote.addEventListener('click', addComments);
+
+    //send comments
+    const btEnvoyer = document.querySelector('#commentaire > button');
+    btEnvoyer.addEventListener('click', sendComments);
 
 }
 
@@ -43,6 +56,8 @@ xhr.onload = function(){
         getCountries();
         sort();
         filter();
+        connexion();
+        //deconnexion();
     }
     effetListe();
 }
@@ -62,6 +77,26 @@ function effetListe(){
         $('.list-group-item').mouseout(function(){
         $(this).css('background-color', 'white');
         $(this).css('color', 'black');
+    });
+    //connexion
+    $('#ok').mouseover(function(){
+        $(this).css('color', 'blue');
+        $(this).css('cursor', 'pointer');
+        $(this).css('fontSize', '30px');
+    });
+    $('#ok').mouseout(function(){
+        $(this).css('color', 'black');
+        $(this).css('fontSize', '14px');
+    });
+    //déconnexion
+    $('#ko').mouseover(function(){
+        $(this).css('color', 'blue');
+        $(this).css('cursor', 'pointer');
+        $(this).css('fontSize', '30px');
+    });
+    $('#ko').mouseout(function(){
+        $(this).css('color', 'black');
+        $(this).css('fontSize', '14px');
     });
 }
 
@@ -120,16 +155,22 @@ function getCountries(){
     }
 }
 // partie récupération des filtres (years)
-
 function getYears(){
     // Trie des années
    let trieYears = xhrContent.sort(function(a,b){
-       return a.year - b.year;
+       if(a.year < b.year){
+           return -1;
+       }
+       if(a.year > b.year){
+           return 1;
+       }
+       return 0;
    });
 
    for(let i = 0; i < winesSize; i++){
-       if(option.innerHTML !== trieYears[i]['year']){
-           countries[i] = trieYears[i]['year'];
+
+        if(option.innerHTML !== trieYears[i]['year']){
+           years[i] = trieYears[i]['year'];
            option = document.createElement('option');
            select = document.getElementById('years');
            option.innerHTML = trieYears[i]['year'];
@@ -137,11 +178,12 @@ function getYears(){
            select.appendChild(option);
        }
    }
+
 }
 
 // afficher les éléments de chaque vin
-// le paramètre wines permet de rendre le filtre dynamique
-// la fonction showWines appelle la fonction showWine apprès avoir afficher la liste des vins
+// le paramètre wines permet de rendre le filtre dynamique en fonction du filtre, du tri ou de la recherche
+// la fonction showWines appelle la fonction showWine après avoir affiché la liste des vins
 function showWine(wines){
 
     // let idAf = document.querySelector('#description > span');
@@ -170,11 +212,15 @@ function showWine(wines){
             color.innerHTML = wines[list[i].id]['color'];
             let price = document.getElementById("price");
             price.innerHTML = wines[list[i].id]['price'];
+            let descriptionWine = document.querySelector('#nav-44518-content-1');
+            descriptionWine.innerHTML =  wines[list[i].id]['description'];
+
+            afficherComments();
         });
     }
 }
 
-// TODO trier sur base de l'element
+// tri croissant et décroissant
 function sort(){
     order = !order;
 
@@ -187,6 +233,8 @@ function sort(){
         if(filtered){
             filter();
     }
+    effetListe();
+
 }
 
 // permet la filtration selon les critères sélectionnés
@@ -195,6 +243,8 @@ function filter(){
     let selectedCountry = selectCountry.value;
     let selectYear = document.getElementById("years");
     let selectedYear = selectYear.value;
+    let descriptionWine = document.querySelector('#nav-44518-content-1');
+    descriptionWine.innerHTML =  "";
 
     // cas où un pays et une année ont été sélectionnés
     if(selectedCountry != 'all' && selectedYear != 'all'){
@@ -218,57 +268,47 @@ function filter(){
         showWines();
     }
 
-
-    //TODO ne pas avoir de doublons dans les filtres
-    //TODO trier les éléments filtrés
-
     // Effet sur liste
     effetListe();
 }
 
-// TODO rechercher un element
-function search(element){
-                const inputSearch = document.querySelector('#inputKey');
-                let keyword = inputSearch.value;
-                let reg = new RegExp(keyword, 'i');
-                // console.log(keyword.length);
-                let tabVins = [];
-                Object.keys(data).forEach(function(vin){
-                    if(vin.name.search(reg) != -1){
-                        tabVins.push(vin);
-                    }
-                    else if((keyword.length <= 2) && (vin.id.search(reg) != -1)){
-                        tabVins.push(vin);
-                    }
-                    else if((keyword.length == 4) && (vin.year.search(reg) != -1)){
-                        tabVins.push(vin);
-                    }
-                })
-                // Affichage de descriptions d'un vin
-                for(let i=1; i<13; i++){
-                    imgAffiche.src = pictureURL + tabVins[0].picture;
-                    allDescription[0].innerHTML = tabVins[0].grapes;
-                    allDescription[1].innerHTML = tabVins[0].country;
-                    allDescription[2].innerHTML = tabVins[0].region;
-                    allDescription[3].innerHTML = data[i].year;
-                    allDescription[4].innerHTML = tabVins[0].capacity;
-                    allDescription[5].innerHTML = tabVins[0].color;
-                    allDescription[6].innerHTML = tabVins[0].price;
-                    idDescription.innerHTML = '#' + tabVins[0].id;
-                    nameDescription.innerHTML = tabVins[0].name;
-                    list[i-1].innerHTML = '';
-                }
-                list[0].innerHTML = tabVins[0].name;
+function wineDescription(){
 
 }
 
+
+//recherche dynamique sans boutton
+$(document).ready(function(){
+           $('#inputKey').keyup(function(){
+                search_wine($(this).val());
+           });
+           function search_wine(value){
+                $('.list-group-item').each(function(){
+                     var found = 'false';
+                     $(this).each(function(){
+                          if($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0)
+                          {
+                               found = 'true';
+                          }
+                     });
+                     if(found == 'true')
+                     {
+                         $(this).show();
+                     }
+                     else
+                     {
+                          $(this).hide();
+                     }
+                });
+           }
+      });
+
+
 // TODO ajouter une photo à un vin
 function addPicture(){
-
     console.log('OK');
     //Afficher la boite de dialogue pour changer l'image
     $('#pictureFile').css('display', 'block');
-
 }
 
 // TODO ajouter une note à un vin
@@ -282,5 +322,241 @@ function like(wine){
 
 }
 
-// TODO gérer la connexion
-// TODO gérer les utilisateurs autorisés
+// afficher les commentaires du vin
+function afficherComments(){
+    let idAf = document.querySelector('#description > span');
+    const idWine = (idAf.innerHTML).split('# ');
+    let inputLogin = document.querySelector('#frmLogin > input[type=text]');
+    let inputPwd = document.querySelector('#frmLogin > input[type=password]');
+    let tabComments = [];
+    let loginUser = inputLogin.value;
+    let pwdUser = inputPwd.value;
+    const credentials = btoa(loginUser+':'+ pwdUser);
+    const afficheNote = document.querySelector('#nav-44518-content-2'); //affichage des commentaires
+    //if(loginUser != ""){
+        let cpt = 1;
+        let wineId = idWine[1];
+        const options = {
+            'method': 'GET',
+            //'mode': 'cors',
+            //'headers': {
+                //'content-type': 'application/json; charset=utf-8',
+                //'Authorization': 'Basic '+ credentials  //Try with other credentials (login:password)
+            //}
+        };
+
+        const fetchURL = '/api/wines/'+wineId+'/comments';
+
+        fetch(apiURL + fetchURL, options).then(function(response) {
+            if(response.ok) {
+                response.json().then(function(data){
+                    console.log(data);
+                    if(data.length != 0){
+                        for(let i=0; i<data.length; i++){
+                            console.log(data[i].content);
+                            for(let j=0; j<users.length; j++){
+                                if(users[j].id == data[i].user_id){
+                                    tabComments.push(cpt + '.' + data[i].content + ' ( ' + users[j].name  + ' )' + '<br>');
+                                }
+                            }
+
+                            cpt++;
+                        }
+                        afficheNote.innerHTML = tabComments;
+                    }else{
+                        afficheNote.innerHTML = "Pas de commentaires"
+                    }
+                });
+            }
+        });
+    // }else{
+    //     console.log('KO');
+    // }
+}
+//Ajouter un commentaire
+function addComments(){
+    $('#commentaire').css('display', 'block');
+}
+function sendComments(){
+    $('#commentaire').css('display', 'none');
+    let idAf = document.querySelector('#description > span');
+    const idWine = (idAf.innerHTML).split('# ');
+    let inputLogin = document.querySelector('#frmLogin > input[type=text]');
+    let inputPwd = document.querySelector('#frmLogin > input[type=password]');
+    let loginUser = inputLogin.value;
+    let pwdUser = inputPwd.value;
+    const credentials = btoa(loginUser+':'+ pwdUser);
+    const commentaire = document.querySelector('#comments').value;
+    let commentSend = { "content" : commentaire };
+    let wineId = idWine[1];
+	const options = {
+        'method': 'POST',
+        'body': JSON.stringify(commentSend),
+        'mode': 'cors',
+        'headers': {
+            'content-type': 'application/json; charset=utf-8',
+            'Authorization': 'Basic ' + credentials
+        }
+    };
+
+    const fetchURL = '/api/wines/'+wineId+'/comments';
+
+    fetch(apiURL + fetchURL, options).then(function(response) {
+        if(response.ok) {
+            response.json().then(function(data){
+                console.log(data);
+            });
+        }
+        else{
+            console.log('Not ok');
+        }
+    });
+}
+
+// gérer la connexion
+function connexion(){
+    $('#frmLogin').css('display', 'none');
+
+    $('#addPicNoteLike').css('display', 'none');
+
+    $('#ok').click(function(){
+        $('#frmLogin').css('display', 'block');
+    });
+    //Liste Users
+let users = [
+    {
+        id: 1,
+        name: 'ced',
+        pwd: 123
+    },
+    {
+        id: 2,
+        name: 'bob',
+        pwd: 123
+    },
+    {
+        id: 25,
+        name: 'mehdi',
+        pwd: 123
+    },
+    {
+        id: 26,
+        name: 'youssef',
+        pwd: 123
+    },
+    {
+        id: 27,
+        name: 'mamadou',
+        pwd: 123
+    },
+    {
+        id: 28,
+        name: 'manuel',
+        pwd: 123
+    },
+    {
+        id: 29,
+        name: 'alain',
+        pwd: 123
+    },
+    {
+        id: 30,
+        name: 'alexandre',
+        pwd: 123
+    },
+    {
+        id: 31,
+        name: 'fred',
+        pwd: 123
+    },
+    {
+        id: 32,
+        name: 'ali',
+        pwd: 123
+    },
+    {
+        id: 33,
+        name: 'angeline',
+        pwd: 123
+    },
+    {
+        id: 34,
+        name: 'sylwester',
+        pwd: 123
+    },
+    {
+        id: 35,
+        name: 'alessandro',
+        pwd: 123
+    },
+    {
+        id: 36,
+        login: 'rachida',
+        pwd: 123
+    },
+    {
+        id: 37,
+        name: 'badredddine',
+        pwd: 123
+    },
+    {
+        id: 38,
+        name: 'amandine',
+        pwd: 123
+    },
+    {
+        id: 39,
+        name: 'guilherme',
+        pwd: 123
+    },
+    {
+        id: 40,
+        name: 'lauren',
+        pwd: 123
+    },
+    {
+        id: 41,
+        name: 'ismael',
+        pwd: 123
+    },
+    {
+        id: 42,
+        name: 'aboubacar',
+        pwd: 123
+    },
+];
+    for(let i=0; i<users.length; i++){
+        console.log(users[i]);
+    }
+    // Tgérer les utilisateurs autorisés
+    let inputLogin = document.querySelector('#frmLogin > input[type=text]');
+    let inputPwd = document.querySelector('#frmLogin > input[type=password]');
+    const btValider = document.querySelector('#frmLogin > input.btn.btn-success');
+    //const blockUsers = document.querySelector('#block2');
+    //let btConnex = document.querySelector('#ok');
+    let message = document.querySelector('#mesage');
+
+    btValider.addEventListener('click', function(e){
+        e.preventDefault();
+
+        //Connexion
+        for(let i=0; i<users.length; i++){
+            if(inputLogin.value == users[i].login && inputPwd.value == users[i].pwd){
+                $('#frmLogin').css('display', 'none');
+                $('#ok').css('display', 'none');
+                $('#ko').css('display', 'block');
+                //$('#addPicNoteLike').css('display', 'block');
+                blockUsers.hidden = false;
+            }else{
+                message.innerHTML = "Login ou mot de passe incorrect";
+                $('#mesage').css('color', 'red');
+            }
+        }
+    });
+}
+// gérer la déconnexion
+function deconnexion(){
+    $('#ko').css('display', 'none');
+    $('#ok').css('display', 'block');
+    $('#addPicNoteLike').css('display', 'none');
+}

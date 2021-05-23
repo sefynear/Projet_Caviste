@@ -19,6 +19,18 @@
         <div class="row">
             <div id="block1" class="col-md-12;"  style="margin-left: 600px; margin-top: 10px;">
                 <a href="index.html"><img src="images/caviste-bg-w.png" style="margin-left: 80px" weidth="100" height="80"></a>
+                <span id="ok" style="margin-left: 300px">Connexion</span>
+                <span id="ko" style="margin-left: 580px; margin-top: -50px">Déconnexion</span>
+                <div>
+                    <form id="frmLogin" style="margin-left: -70px">
+                        <label for="login">Login</label>
+                        <input type="text" name="login">
+                        <label for="pwd">Password</label>
+                        <input type="password" name="pwd">
+                        <input type="submit" name="btSend" class="btn btn-success" value="Valider">
+                        <span id="mesage"></span>
+                    </form>
+                </div>
             </div>
             <ul id = "wineData">
             </ul>
@@ -26,7 +38,6 @@
         <div>
             <form class="form-inline" action="#" method = "">
                 <input type="text" id = "inputKey" style="font-size: 20px" placeholder="Enter keyword here...">
-                <button class="btn btn-success" id = "btSearch" type = "button" style="margin-top: -9px"><i>Search</i></button>
             <br><br>
             </form>
 
@@ -59,16 +70,85 @@
                 <label>Capacity: <i id ="capacity"></i></label><br>
                 <label>Color: <i id = "color"></i></label><br>
                 <label>Price: <i id = "price"></i></label><br><br>
-                <div>
+                <div id="addPicNoteLike">
                     <!-- Add picture -->
                     <i class="fas fa-camera"></i> Add a picture (1/3)
-                    <button type="button" class="btn btn-light" id="btAddImg">                               
+                    <button type="button" class="btn btn-light" id="btAddImg">
                          <input id="pictureFile" name="pictureFile" type="file" pattern=".*\.(jp(e)?g|png)$" class="form-control input-md">
                     </button><br><br>
                     <!-- Add note -->
-                    <i class="fas fa-pencil-alt"></i> Add a note<br><br>
+                    <i class="fas fa-pencil-alt"></i> Add a note
+                    <div class="form-group" id="commentaire">
+                        <textarea type="text" id="comments" name="comments" rows="2"></textarea>
+                        <button type="submit" name="btSendCom" class="btn btn-success" style="margin-top: -20px;">Send</button>
+                    </div><br><br>
                     <!-- Like wine -->
                     <i class="fab fa-gratipay"></i> Like this wine <span style="background-color: red; color: white"><i class="far fa-heart"></i>345</span>
+                </div>
+            </div>
+        </div>
+         <!-- Description Commentaires Pays producteurs Vins préférés de User5 -->
+        <div class="row" id="block2">
+            <div id="commentaires" class="col-md-7">
+                <div class="card">
+                    <div class="card-body bgc-ghost-white">
+                        <ul class="nav nav-tabs" id="nav-44518-tab" role="tablist">
+                            <li class="nav-item">
+                                <a class="a-btn nav-link active ltc-ruddy-brown" data-toggle="tab" href="#nav-44518-content-1" role="tab" aria-controls="nav-44518-content-1" aria-selected="true">Description du vin séléctionner</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="a-btn nav-link" id="nav-44518-tab-2" data-toggle="tab" href="#nav-44518-content-2" role="tab" aria-controls="nav-44518-content-2" aria-selected="false">Commentaires des clients</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="a-btn nav-link" id="nav-44518-tab-4" data-toggle="tab" href="#nav-44518-content-4" role="tab" aria-controls="nav-44518-content-4" aria-selected="false">Pays producteurs</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="a-btn nav-link " id="nav-44518-tab-5" data-toggle="tab" href="#nav-44518-content-5" role="tab" aria-controls="nav-44518-content-5" aria-selected="false">Vins préférés de l'utilisateur</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content">
+                            <div class="tab-pane fade-tab-bs" id="nav-44518-content-1" role="tabpanel" aria-labelledby="nav-44518-content-1">
+                                <h3 class="mg-md">
+                                    Description de nos produits
+                                </h3>
+                                <p>
+                                    Veuillez sélectionner un vin sur la liste pour afficher la description de ce vin.
+                                </p>
+                            </div>
+                            <div class="tab-pane fade-tab-bs" id="nav-44518-content-2" role="tabpanel" aria-labelledby="nav-44518-content-2">
+                                <h3 class="mg-md">
+                                    Commentaires de nos clients
+                                </h3>
+                                <p>
+                                    Veuillez sélectionner un vin sur la liste pour afficher les commentaires de ce vin.
+                                </p>
+
+                            </div>
+                            <div class="tab-pane fade-tab-bs" id="nav-44518-content-4" role="tabpanel" aria-labelledby="nav-44518-content-4">
+                                <h3 class="mg-md">
+                                    La liste des Pays producteurs de nos vins.
+                                </h3>
+                                <p>
+                                    List Countries
+                                </p>
+                            </div>
+                            <div class="tab-pane fade-tab-bs" id="nav-44518-content-5" role="tabpanel" aria-labelledby="nav-44518-content-5">
+                                <h3 class="mg-md">
+                                    Vins préféres de l'utilisateur
+                                </h3>
+                                <p>
+                                    Liste des vins préférés
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="courbe" class="col-md-5">
+                <!-- courbe-et-stat-donnees- -->
+                <div class="col-lg-2"><h5>Statistique</h5></div>
+                <div class="col-lg-3">
+                    <img src="images/courbe.png"><br>
                 </div>
             </div>
         </div>
