@@ -15,9 +15,11 @@ let order = false;
 let option = "";
 
 
+
 // chargement de la page
 window.onload = function(){
     let btFilter = document.getElementById("btFilter");
+
     let btSort = document.getElementById("btSort");
     btFilter.addEventListener('click', filter);
     btSort.addEventListener('click', sort);
@@ -29,21 +31,43 @@ window.onload = function(){
 
     let pictureFile = document.querySelector('#pictureFile');
     pictureFile.addEventListener('change', addPicture);
-
     //déconnexion
     $('#ko').css('display', 'none');
     let btDeconnex = document.querySelector('#ko');
     btDeconnex.addEventListener('click', deconnexion);
-
     //add note
     $('#commentaire').css('display', 'none');
     const btNote = document.querySelector('#addPicNoteLike > i.fas.fa-pencil-alt');
     btNote.addEventListener('click', addComments);
-
     //send comments
     const btEnvoyer = document.querySelector('#commentaire > button');
     btEnvoyer.addEventListener('click', sendComments);
 
+    //recherche dynamique sans boutton
+    $(document).ready(function(){
+               $('#inputKey').keyup(function(){
+                    search_wine($(this).val());
+               });
+               function search_wine(value){
+                    $('.list-group-item').each(function(){
+                         var found = 'false';
+                         $(this).each(function(){
+                              if($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0)
+                              {
+                                   found = 'true';
+                              }
+                         });
+                         if(found == 'true')
+                         {
+                             $(this).show();
+                         }
+                         else
+                         {
+                              $(this).hide();
+                         }
+                    });
+               }
+          });
 }
 
 // traitement de la requête
@@ -111,7 +135,7 @@ function jsonToArray(){
 
 // afficher les vins
 function showWines(wines = xhrContent){
-    console.log(wines);
+    //console.log(wines);
     // boucle pour récupérer les données individuellement
     // on crée une balise li pour chaque élément
     $('.list-group-item').remove();
@@ -142,6 +166,7 @@ function getCountries(){
         }
         return 0;
     });
+    //console.log(trieCountries);
 
     for(let j = 0; j < winesSize; j++){
         if(option.innerHTML !== trieCountries[j]['country']){
@@ -166,6 +191,7 @@ function getYears(){
        }
        return 0;
    });
+   //console.log(trieYears);
 
    for(let i = 0; i < winesSize; i++){
 
@@ -215,6 +241,7 @@ function showWine(wines){
             let descriptionWine = document.querySelector('#nav-44518-content-1');
             descriptionWine.innerHTML =  wines[list[i].id]['description'];
 
+            //Afficher les commentaires des users
             afficherComments();
         });
     }
@@ -234,7 +261,6 @@ function sort(){
             filter();
     }
     effetListe();
-
 }
 
 // permet la filtration selon les critères sélectionnés
@@ -275,34 +301,6 @@ function filter(){
 function wineDescription(){
 
 }
-
-
-//recherche dynamique sans boutton
-$(document).ready(function(){
-           $('#inputKey').keyup(function(){
-                search_wine($(this).val());
-           });
-           function search_wine(value){
-                $('.list-group-item').each(function(){
-                     var found = 'false';
-                     $(this).each(function(){
-                          if($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0)
-                          {
-                               found = 'true';
-                          }
-                     });
-                     if(found == 'true')
-                     {
-                         $(this).show();
-                     }
-                     else
-                     {
-                          $(this).hide();
-                     }
-                });
-           }
-      });
-
 
 // TODO ajouter une photo à un vin
 function addPicture(){
