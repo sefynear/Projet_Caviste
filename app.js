@@ -117,29 +117,29 @@ window.onload = function(){
     }
     //recherche dynamique sans boutton
     $(document).ready(function(){
-               $('#inputKey').keyup(function(){
-                    search_wine($(this).val());
-               });
-               function search_wine(value){
-                    $('.list-group-item').each(function(){
-                         var found = 'false';
-                         $(this).each(function(){
-                              if($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0)
-                              {
-                                   found = 'true';
-                              }
-                         });
-                         if(found == 'true')
-                         {
-                             $(this).show();
-                         }
-                         else
-                         {
-                              $(this).hide();
-                         }
-                    });
-               }
-          });
+        $('#inputKey').keyup(function(){
+            search_wine($(this).val());
+        });
+        function search_wine(value){
+            $('.list-group-item').each(function(){
+                var found = 'false';
+                $(this).each(function(){
+                    if($(this).text().toLowerCase().indexOf(value.toLowerCase()) >= 0)
+                    {
+                        found = 'true';
+                    }
+                });
+                if(found == 'true')
+                {
+                    $(this).show();
+                }
+                else
+                {
+                    $(this).hide();
+                }
+            });
+        }
+    });
 }
 
 // traitement de la requête
@@ -658,3 +658,94 @@ function deconnexion(){
     $('#ok').css('display', 'block');
     $('#addPicNoteLike').css('display', 'none');
 }
+//Stattistique
+let dataWines ;
+let nbWineArgentina,nbWineFrance,nbWinesItaly,nbWineSpain,nbWineUSA  ;
+let cptWineArg = 0;
+let cptWineFr = 0; 
+let cptWineIta = 0;
+let cptWineSpa = 0;
+let cptWineUs = 0;
+fetch(apiURL+'/api/wines')
+    .then(function(response){
+        return response.json();
+    })
+    .then(function(dataList){
+        console.log(dataList);
+        dataWines = dataList;
+        Object.values(dataWines).forEach(function(wine){
+            if(wine.country=="Argentina"){
+                cptWineArg++;
+            }
+            if(wine.country=="France"){
+                cptWineFr++;
+            }
+            if(wine.country=="Italy"){
+                cptWineIta++;
+            }
+            if(wine.country=="Spain"){
+                cptWineSpa++;
+            }
+            if(wine.country=="USA"){
+                cptWineUs++;
+            }
+        })
+        nbWineArgentina = cptWineArg;
+        // console.log(cptWineArg);
+        nbWineFrance = cptWineFr;
+        //console.log(cptWineFr);
+        nbWinesItaly = cptWineIta;
+        //console.log(cptWineIta);
+        nbWineSpain = cptWineSpa;
+        //console.log(cptWineSpa);
+        nbWineUSA = cptWineUs;
+        //console.log(cptWineUs);
+
+        // creation of the charts 
+        let myLabel = ['Argentina','France','Italy','Spain','USA'];
+        let myData = [nbWineArgentina,nbWineFrance,nbWinesItaly,nbWineSpain,nbWineUSA];
+
+        // Definition of the wine production's charts
+        let ctx = document.getElementById('myChart').getContext('2d');
+        let myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                // labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+                labels: myLabel,
+                datasets: [{
+                    label: 'Productions of wine by countries',
+                    // data: [12, 19, 3, 5, 2, 3],
+                    data: myData,
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    })
+.catch(function(err){
+    console.log(err);
+})
