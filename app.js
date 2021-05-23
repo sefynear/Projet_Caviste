@@ -411,16 +411,7 @@ function sendComments(){
     });
 }
 
-// gérer la connexion
-function connexion(){
-    $('#frmLogin').css('display', 'none');
-
-    $('#addPicNoteLike').css('display', 'none');
-
-    $('#ok').click(function(){
-        $('#frmLogin').css('display', 'block');
-    });
-    //Liste Users
+//Liste Users
 let users = [
     {
         id: 1,
@@ -523,6 +514,17 @@ let users = [
         pwd: 123
     },
 ];
+
+// gérer la connexion
+function connexion(){
+    $('#frmLogin').css('display', 'none');
+
+    $('#addPicNoteLike').css('display', 'none');
+
+    $('#ok').click(function(){
+        $('#frmLogin').css('display', 'block');
+    });
+
     for(let i=0; i<users.length; i++){
         console.log(users[i]);
     }
