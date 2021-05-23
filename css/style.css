@@ -4,16 +4,22 @@
     Created on : 08-févr.-2020, 12:22:54
     Author     : ceruth
 */
-.container {
-    border: 1px solid gray;
-    background-color: white;
-    margin-top: 20px;
-    box-shadow: 5px 5px 10px darkred;
-    border-radius: 15px;
-}
+
 
 body {
-    background-color: silver;
+    color:black;
+    background-color:white;
+    background: url(../images/vin02.jpg) repeat;
+}
+
+.container{
+    width: 1500px;
+    height: 900px;
+    margin-top: 30px;
+    border-radius: 0%;
+    background-color: white;
+    box-shadow: 5px 5px 10px darkred;
+    border-radius: 15px;
 }
 
 a.active {
@@ -40,4 +46,89 @@ footer {
     text-align: center;
     border-top: 1px solid silver;
     margin: 15px 0;
+}
+
+main{
+    width: 80%;
+    margin: auto;
+}
+
+.diapo{
+    position: relative;
+    overflow: hidden;
+}
+
+#nav-droite, #nav-gauche{
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: white;
+    font-size: 3em;
+}
+
+#nav-droite{
+    right: 20px;
+}
+#nav-gauche{
+    left: 20px;
+}
+
+.elements{
+    display: flex;
+    transition: 1s linear;
+}
+
+.element{
+    flex: 1 0 100%;
+    position: relative;
+}
+
+.element > img{
+    width: 20%;
+}
+
+.caption{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    background-color: rgba(255,255,255,0.4);
+    padding: 30px;
+}
+
+#liste li:hover{
+    cursor: pointer;
+    background-color:#984b26 ;
+    color: #ffffff;
+    transition: .3s ease-in-out;
+}
+
+#btAddComment{
+    margin-left: 10em;
+}
+
+#btnLike{
+    margin-left: -5em !important;
+}
+
+#myChart{
+    width:180px;
+    height:180px;
+}
+.left, .right {
+  float: left;
+  width: 20%; /* The width is 20%, by default */
+}
+
+.main {
+  float: left;
+  width: 60%; /* The width is 60%, by default */
+}
+
+/* Use a media query to add a breakpoint at 800px: */
+@media screen and (max-width: 800px) {
+  .left, .main, .right {
+    width: 100%; /* The width is 100%, when the viewport is 800px or smaller */
+  }
 }
