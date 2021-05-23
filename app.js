@@ -411,6 +411,7 @@ function sendComments(){
     });
 }
 
+// gérer la connexion
 //Liste Users
 let users = [
     {
@@ -514,39 +515,37 @@ let users = [
         pwd: 123
     },
 ];
-
-// gérer la connexion
 function connexion(){
     $('#frmLogin').css('display', 'none');
 
     $('#addPicNoteLike').css('display', 'none');
-
+    
     $('#ok').click(function(){
         $('#frmLogin').css('display', 'block');
     });
-
-    for(let i=0; i<users.length; i++){
-        console.log(users[i]);
-    }
-    // Tgérer les utilisateurs autorisés
+    
+    // for(let i=0; i<users.length; i++){
+    //     console.log(users[i]);
+    // }
+    // gérer les utilisateurs autorisés      
     let inputLogin = document.querySelector('#frmLogin > input[type=text]');
     let inputPwd = document.querySelector('#frmLogin > input[type=password]');
-    const btValider = document.querySelector('#frmLogin > input.btn.btn-success');
+    const btValider = document.querySelector('#frmLogin > input.btn.btn-success');    
     //const blockUsers = document.querySelector('#block2');
-    //let btConnex = document.querySelector('#ok');
+    //let btConnex = document.querySelector('#ok');    
     let message = document.querySelector('#mesage');
-
+   
     btValider.addEventListener('click', function(e){
         e.preventDefault();
 
         //Connexion
         for(let i=0; i<users.length; i++){
-            if(inputLogin.value == users[i].login && inputPwd.value == users[i].pwd){
+            if(inputLogin.value == users[i].name && inputPwd.value == users[i].pwd){
                 $('#frmLogin').css('display', 'none');
                 $('#ok').css('display', 'none');
                 $('#ko').css('display', 'block');
-                //$('#addPicNoteLike').css('display', 'block');
-                blockUsers.hidden = false;
+                $('#addPicNoteLike').css('display', 'block');
+                //blockUsers.hidden = false;
             }else{
                 message.innerHTML = "Login ou mot de passe incorrect";
                 $('#mesage').css('color', 'red');
